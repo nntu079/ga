@@ -1,48 +1,82 @@
 import functions
 import utils
 import random
+import copy
 
 suppliers = {
     'A': 2,
     'B': 3,
     'C': 4,
-    'D': 1,
-    'E': 4,
-    'F': 2,
-    'G': 5
+    'D': 1
 }
-capacity = 10
 
-F0 = utils.makeF0(suppliers, capacity)
+capacity = 7
+
+individual1 = [['A', 'B'], ['C'], ['D']]
+individual2 = [['A'], ['C'], ['B', 'D']]
+individual3 = [['A'], ['B'], ['C'], ['D']]
+
+F0 = [individual1, individual2, individual3]
 
 def crossover_population(population, capacity, suppliers, n_cross):
 
-    [individual1, individual2] = utils.getRandomTwoIndividual(population)
-
-    [child1, child2] = functions.crossover(individual1, individual2)
-
+    count = 0
     for _ in range(0, n_cross):
-        if (utils.evaluate(child1, capacity, suppliers) == -1):
+        [individual1, individual2] = utils.getRandomTwoIndividual(population)
+        [child1, child2] = functions.crossover(individual1, individual2)
+
+        if (utils.evaluate(child1, capacity, suppliers) == -1) and len(child1) != 0:
             [can_fix, new_child] = utils.fix(child1, suppliers, capacity)
             if (can_fix == True):
+                count = count + 1
                 population.append(new_child)
-        else:
+        elif len(child1) != 0:
+            count = count + 1
             population.append(child1)
 
-        if (utils.evaluate(child2, capacity, suppliers) == -1):
+        if (utils.evaluate(child2, capacity, suppliers) == -1) and len(child2) != 0:
             [can_fix, new_child] = utils.fix(child2, suppliers, capacity)
             if (can_fix == True):
+                count = count + 1
                 population.append(new_child)
-        else:
+        elif len(child2) != 0:
+            count = count + 1
             population.append(child2)
 
-    return population
+    return [count,population]
 
+def mutation_population(population, capacity, suppliers, n_muation):
 
-F1 = crossover_population(F0,capacity,suppliers,10)
+    count = 0
+    for _ in range(0, n_muation):
+        individual = utils.getRandomIndividual(population)
+        result = functions.mutation(individual, capacity, suppliers)
+        if (result[0]):
+            population.append(individual)
+            count = count+1
+    return [count, population]
 
-chil1 = F1[0]
-chil2 = F1[1]
+def enhance_population(population,capacity,suppliers, n_enhance):
+    count = 0
+    for _ in range(0,n_enhance):
+        [new_individual,index] = utils.getRandomIndividual(population,True)
+        [can_enhance,new_individual] = utils.enhance(new_individual,capacity,suppliers)
+        
+        if(can_enhance):
+            population.pop(index)
+        
 
-print(chil1)
-print(functions.mutation(chil1))
+            population.append(new_individual)
+            count = count + 1
+    return [count,population]
+
+F1 = copy.deepcopy(F0)
+F1 = crossover_population(F1, capacity, suppliers, 5)[1]
+F1 = mutation_population(F1,capacity,suppliers,5)[1]
+F1 = enhance_population(F1,capacity,suppliers,10)[1]
+
+for _ in F0:
+    print(_)
+print('----'*10)
+for _ in F1:
+    print(_)

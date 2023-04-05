@@ -1,4 +1,6 @@
 import random
+import copy
+
 
 
 def sum_gen(gen, suppliers):
@@ -7,6 +9,9 @@ def sum_gen(gen, suppliers):
         sum = sum + suppliers[bit]
 
     return sum
+
+def cloneIndividual(individual):
+    return copy.deepcopy(individual)
 
 def fix(individual, suppliers, capacity):
     count = 0
@@ -91,12 +96,38 @@ def makeF0(suppliers, capacity):
 
     return F0
 
+def getRandomIndividual(populations,getIndex= False):
+    len_populations = len(populations)
+    random_index = random.randint(0, len_populations-1)
+
+    if(getIndex):
+        return [copy.deepcopy(populations[random_index]),random_index]
+    
+    return copy.deepcopy(populations[random_index])
+
 def getRandomTwoIndividual(populations):
 
     len_populations = len(populations)
+    
     random1 = random.randint(0, len_populations-1)
+    random2 = random.randint(0, len_populations-1)
 
-    while (1):
+    while (random2 == random1):
         random2 = random.randint(0, len_populations-1)
-        if (random2 != random1):
-            return [populations[random1], populations[random2]]
+   
+    return [copy.deepcopy(populations[random1]), copy.deepcopy(populations[random2])]
+
+def enhance(individual,capacity, suppliers):
+
+    individual = copy.deepcopy(individual)
+
+    idx_gen = getRamdomIndex(individual)[0]
+
+
+    individual[idx_gen-1] = individual[idx_gen] + individual[idx_gen-1]
+    individual.pop(idx_gen)
+
+    if (evaluate(individual, capacity, suppliers) == -1):
+        return fix(individual,suppliers,capacity)
+    else:
+        return [True, individual]

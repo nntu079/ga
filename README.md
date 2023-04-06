@@ -1,4 +1,4 @@
-Dear Mr. Tu,
+Dear Mr. Tú,
 Please cứu me fix những chỗ này:
 1/ CROSSOVER theo Logic của em ======= KO GẤP (Fee) ~ 1t
 2/ Cố định số lượng quần thể, để từ đó select ra N con tốt nhất (free)

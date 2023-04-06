@@ -2,12 +2,12 @@ import utils
 import copy
 
 
-individual = [['A', 'B'], ['C'], ['D']]
+individual = [['Adidas', 'Converse'], ['Vans'], ['Ananas']]
 suppliers = {
-    'A': 2,
-    'B': 2,
-    'C': 4,
-    'D': 1,
+    'Adidas': 2,
+    'Converse': 2,
+    'Vans': 4,
+    'Ananas': 1,
 }
 capacity = 5
 

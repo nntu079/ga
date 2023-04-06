@@ -1,9 +1,9 @@
 import random
 import copy
 
-individual1 = [['A', 'B'], ['C'], ['D']]
-individual2 = [['A'], ['C'], ['B', 'D']]
-individual3 = [['A'], ['B'], ['C'], ['D']]
+individual1 = [['Adidas', 'Converse'], ['Vans'], ['Ananas']]
+individual2 = [['Adidas'], ['Vans'], ['Converse', 'Ananas']]
+individual3 = [['Adidas'], ['Converse'], ['Vans'], ['Ananas']]
 
 F0 = [individual1, individual2, individual3]
 
@@ -142,6 +142,6 @@ def enhance(individual,capacity, suppliers):
     else:
         return [True, individual]
     
-def getScore(individual):
+def getScore(individual):         #Đếm số ngày trong plan đó
     return len(individual)
 

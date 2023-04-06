@@ -3,21 +3,21 @@ import utils
 import copy
 
 suppliers = {
-    'A': 50,
-    'B': 50,
-    'C': 4,
-    'D': 1,
-    'E': 3
+    'Adidas': 20,
+    'Converse': 30,
+    'Vans': 10,
+    'Ananas': 20,
+    'Bitis': 10
 }
 
-capacity = 200
+capacity = 100
 
-individual1 = [['A', 'B'], ['C'], ['D'],['E']]
-individual2 = [['A'], ['C'], ['B', 'D'],['E']]
-individual3 = [['A'], ['B'], ['C'], ['D'],['E']]
-individual4 = [['A','B'], ['C'], ['D'],['E']]
-individual5 = [['A'], ['B','C'], ['D','E']]
-individual6 = [['A','B','C'], ['D'],['E']]
+individual1 = [['Adidas', 'Converse'], ['Vans'], ['Ananas'],['Bitis']]
+individual2 = [['Adidas'], ['Vans'], ['Converse', 'Ananas'],['Bitis']]
+individual3 = [['Adidas'], ['Converse'], ['Vans'], ['Ananas'],['Bitis']]
+individual4 = [['Adidas','Converse'], ['Vans'], ['Ananas'],['Bitis']]
+individual5 = [['Adidas'], ['Converse','Vans'], ['Ananas','Bitis']]
+individual6 = [['Adidas','Converse','Vans'], ['Ananas'],['Bitis']]
 
 
 F0 = [individual1,individual2,individual3,individual4,individual5,individual6]
@@ -75,7 +75,7 @@ def enhance_population(population,capacity,suppliers, n_enhance):
     return [count,population]
 
 def selection_population(population,n_selection):
-    population.sort(key=utils.getScore)
+    population.sort(key=utils.getScore)        #Sort là hàm mặc định từ nhỏ -> lớn, ở đây Sort số ngày
    
     population = population[:n_selection]
 
@@ -97,9 +97,9 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_sel
         Fi = selection_population(Fi,n_selection)
     
         if(output != ""):
-            f.write('GENERATION'+'\n')
+            f.write('GENERATION '+str(count)+'\n')
             for _ in Fi:
-                f.write(str(_)+ ' ===||======> '+ str(len(_))+'\n') 
+                f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
         else:
             print('Đời F'+ str(count))
             for _ in Fi:
@@ -109,4 +109,4 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_sel
 
     return population
 
-GA(F0,capacity,suppliers,n_GA=5,n_cross=15,n_muation=15,n_enhance=10,n_selection=15,output="output.txt")
+GA(F0,capacity,suppliers,n_GA=3,n_cross=5,n_muation=5,n_enhance=5,n_selection=10,output="output.txt")

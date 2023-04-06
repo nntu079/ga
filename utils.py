@@ -21,6 +21,7 @@ def fix(individual, suppliers, capacity):
     count = 0
     idx_gen = -1
 
+
     for idx, gen in enumerate(individual):
         sum = 0
         for bit in gen:
@@ -65,6 +66,8 @@ def fix(individual, suppliers, capacity):
 
 def getRamdomIndex(individual):
     len1 = len(individual)
+ 
+ 
     random1 = random.randint(0, len1-1)
 
     len2 = len(individual[random1])
@@ -125,6 +128,9 @@ def enhance(individual,capacity, suppliers):
 
     individual = copy.deepcopy(individual)
 
+    if(len(individual)==0):
+        return [False, individual]
+
     idx_gen = getRamdomIndex(individual)[0]
 
 
@@ -139,4 +145,3 @@ def enhance(individual,capacity, suppliers):
 def getScore(individual):
     return len(individual)
 
-F0.sort(key=getScore, reverse=True)

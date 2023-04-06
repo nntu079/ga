@@ -64,10 +64,10 @@ def crossover(individual1, individual2):
             elif (individual2[i1][i2] == bit2):
                 newIndividual2[i1][i2] = bit1
 
-    if(newIndividual1 == individual1):
-        newIndividual1 = []
-    if(newIndividual2 == individual2):
-        newIndividual2 = []
+    #if(newIndividual1 == individual1):
+    #    newIndividual1 = []
+    #if(newIndividual2 == individual2):
+    #    newIndividual2 = []
 
     return [newIndividual1,newIndividual2]
 

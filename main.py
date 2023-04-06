@@ -1,6 +1,5 @@
 import functions
 import utils
-import random
 import copy
 
 suppliers = {
@@ -70,13 +69,30 @@ def enhance_population(population,capacity,suppliers, n_enhance):
             count = count + 1
     return [count,population]
 
-F1 = copy.deepcopy(F0)
-F1 = crossover_population(F1, capacity, suppliers, 5)[1]
-F1 = mutation_population(F1,capacity,suppliers,5)[1]
-F1 = enhance_population(F1,capacity,suppliers,10)[1]
+def selection_populatio(population,n_selection):
+    population.sort(key=utils.getScore)
+    population = population[:n_selection]
 
-for _ in F0:
-    print(_)
-print('----'*10)
-for _ in F1:
-    print(_)
+    return population
+
+def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection):
+
+    Fi = population
+    count = 1
+    for _ in range(n_GA):
+        Fi = copy.deepcopy(F0)
+        Fi = crossover_population(Fi, capacity, suppliers, n_cross)[1]
+        Fi = mutation_population(Fi,capacity,suppliers,n_muation)[1]
+        Fi = enhance_population(Fi,capacity,suppliers,n_enhance)[1]
+        Fi = selection_populatio(Fi,n_selection)
+
+        print('Đời F'+ str(count))
+        for _ in Fi:
+            print(_)
+
+        count = count +1
+
+    return population
+
+
+GA(F0,capacity,suppliers,2,10,10,3,15)

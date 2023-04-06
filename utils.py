@@ -1,7 +1,11 @@
 import random
 import copy
 
+individual1 = [['A', 'B'], ['C'], ['D']]
+individual2 = [['A'], ['C'], ['B', 'D']]
+individual3 = [['A'], ['B'], ['C'], ['D']]
 
+F0 = [individual1, individual2, individual3]
 
 def sum_gen(gen, suppliers):
     sum = 0
@@ -131,3 +135,8 @@ def enhance(individual,capacity, suppliers):
         return fix(individual,suppliers,capacity)
     else:
         return [True, individual]
+    
+def getScore(individual):
+    return len(individual)
+
+F0.sort(key=getScore, reverse=True)

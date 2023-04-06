@@ -105,4 +105,5 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_sel
 
     return population
 
-GA(F0,capacity,suppliers,n_GA=5,n_cross=15,n_muation=15,n_enhance=10,n_selection=15,output="output.txt")
+GA(F0,capacity,suppliers,n_GA=5,n_cross=15,n_muation=15,n_enhance=10,n_selection=20,output="output.txt")
+

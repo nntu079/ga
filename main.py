@@ -74,7 +74,7 @@ def enhance_population(population,capacity,suppliers, n_enhance):
             count = count + 1
     return [count,population]
 
-def selection_populatio(population,n_selection):
+def selection_population(population,n_selection):
     population.sort(key=utils.getScore)
    
     population = population[:n_selection]
@@ -94,7 +94,7 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_sel
         Fi = crossover_population(Fi, capacity, suppliers, n_cross)[1]
         Fi = mutation_population(Fi,capacity,suppliers,n_muation)[1]
         Fi = enhance_population(Fi,capacity,suppliers,n_enhance)[1]
-        Fi = selection_populatio(Fi,n_selection)
+        Fi = selection_population(Fi,n_selection)
     
         if(output != ""):
             f.write('GENERATION'+'\n')

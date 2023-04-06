@@ -22,7 +22,7 @@ def fix(individual, suppliers, capacity):
     idx_gen = -1
 
 
-    for idx, gen in enumerate(individual):
+    for idx, gen in enumerate(individual):      #enumrate là vòng lặp vừa lấy chỉ số vừa lấy giá trị
         sum = 0
         for bit in gen:
             sum = sum + suppliers[bit]
@@ -84,7 +84,7 @@ def evaluate(individual, capacity, suppliers):
                 return -1
     return len(individual)
 
-def makeF0(suppliers, capacity):
+def makeF0(suppliers, capacity, n_max):
     F0 = []
     all_suppliers = list(suppliers.keys())
 
@@ -101,7 +101,7 @@ def makeF0(suppliers, capacity):
                         individual.append([supplier1, supplier2])
                 F0.append(individual)
 
-    return F0
+    return F0[:n_max]
 
 def getRandomIndividual(populations,getIndex= False):
     len_populations = len(populations)

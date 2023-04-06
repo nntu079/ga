@@ -3,20 +3,24 @@ import utils
 import copy
 
 suppliers = {
-    'A': 2,
-    'B': 3,
+    'A': 50,
+    'B': 50,
     'C': 4,
     'D': 1,
-    'E':3
+    'E': 3
 }
 
-capacity = 15
+capacity = 200
 
 individual1 = [['A', 'B'], ['C'], ['D'],['E']]
 individual2 = [['A'], ['C'], ['B', 'D'],['E']]
 individual3 = [['A'], ['B'], ['C'], ['D'],['E']]
+individual4 = [['A','B'], ['C'], ['D'],['E']]
+individual5 = [['A'], ['B','C'], ['D','E']]
+individual6 = [['A','B','C'], ['D'],['E']]
 
-F0 = [individual1, individual2, individual3]
+
+F0 = [individual1,individual2,individual3,individual4,individual5,individual6]
 
 def crossover_population(population, capacity, suppliers, n_cross):
 
@@ -91,11 +95,11 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_sel
         Fi = mutation_population(Fi,capacity,suppliers,n_muation)[1]
         Fi = enhance_population(Fi,capacity,suppliers,n_enhance)[1]
         Fi = selection_populatio(Fi,n_selection)
-
+    
         if(output != ""):
             f.write('GENERATION'+'\n')
             for _ in Fi:
-                f.write(str(_)+'\n')
+                f.write(str(_)+ ' ===||======> '+ str(len(_))+'\n') 
         else:
             print('Đời F'+ str(count))
             for _ in Fi:
@@ -106,4 +110,3 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_sel
     return population
 
 GA(F0,capacity,suppliers,n_GA=5,n_cross=15,n_muation=15,n_enhance=10,n_selection=15,output="output.txt")
-

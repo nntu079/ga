@@ -17,12 +17,14 @@ def sum_gen(gen, suppliers):
 def cloneIndividual(individual):
     return copy.deepcopy(individual)
 
-def fix(individual, suppliers, capacity):
+def fix(individual, suppliers, capacity):      #FIX NẾU INDIVIDUAL KO THỎA ĐK (LỐ CAP)
+                                               #CHECK TẤT CẢ NGÀY XEM NGÀY NÀO ĐANG LỐ
+                                               #BÓC RA SUPPLIER NHỎ NHẤT, ĐEM THỬ VÀO CÁC NGÀY CÒN LẠI
     count = 0
     idx_gen = -1
 
 
-    for idx, gen in enumerate(individual):      #enumrate là vòng lặp vừa lấy chỉ số vừa lấy giá trị
+    for idx, gen in enumerate(individual):      #enumrate là vòng lặp vừa lấy index vừa lấy giá trị
         sum = 0
         for bit in gen:
             sum = sum + suppliers[bit]
@@ -64,7 +66,7 @@ def fix(individual, suppliers, capacity):
 
     return [False, individual]
 
-def getRamdomIndex(individual):
+def getRamdomIndex(individual):             #LẤY NGẪU NHIÊN INDEX -> ÁP DỤNG TRONG CROSSOVER CŨ
     len1 = len(individual)
  
  
@@ -75,7 +77,7 @@ def getRamdomIndex(individual):
 
     return [random1, random2]
 
-def evaluate(individual, capacity, suppliers):
+def evaluate(individual, capacity, suppliers):      #CHECK XEM INDIVIDUAL CÓ ĐANG LỐ CAP KO
     for gen in individual:
         sum = 0
         for bit in gen:
@@ -84,7 +86,7 @@ def evaluate(individual, capacity, suppliers):
                 return -1
     return len(individual)
 
-def makeF0(suppliers, capacity, n_max):
+def makeF0(suppliers, capacity, n_max):        
     F0 = []
     all_suppliers = list(suppliers.keys())
 

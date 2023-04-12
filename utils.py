@@ -17,50 +17,71 @@ def sum_gen(gen, suppliers):
 def cloneIndividual(individual):
     return copy.deepcopy(individual)
 
-def fix(individual, suppliers, capacity):
+def fix(individual, suppliers, capacity,current_capacity):
     count = 0
     idx_gen = -1
 
-
+    #đếm số gen cần fix, >=2 => từ chối fix
     for idx, gen in enumerate(individual):      #enumrate là vòng lặp vừa lấy chỉ số vừa lấy giá trị
-        sum = 0
-        for bit in gen:
-            sum = sum + suppliers[bit]
-            if (sum > capacity):
-                idx_gen = idx
-                count = count + 1
-                if (count >= 2):
-                    return [False, individual]
+        if(idx == 0):
+            sum = 0
+            for bit in gen:
+                sum = sum + suppliers[bit]
+                if (sum > current_capacity):
+                    idx_gen = idx
+                    count = count + 1
+                    if (count >= 2):
+                        return [False, individual]
+        else:
+            sum = 0
+            for bit in gen:
+                sum = sum + suppliers[bit]
+                if (sum > capacity):
+                    idx_gen = idx
+                    count = count + 1
+                    if (count >= 2):
+                        return [False, individual]
+
+    #idx_gen vị trí gen cần fix
     idx_min = 0
     gen_fix = individual[idx_gen]
-    min_bit_value = suppliers[gen_fix[idx_min]]
+    min_bit_value = suppliers[gen_fix[idx_min]] #bit nhỏ nhất trong gen
 
-    for idx, bit in enumerate(gen_fix):
+    #tìm idx_min vị trí bit, min_bit_value giá trị bit của bit nhỏ nhất tron gen cần fix
+    for idx, bit in enumerate(gen_fix): 
         if suppliers[bit] < min_bit_value:
             min_bit_value = suppliers[bit]
             idx_min = idx
 
-    gex_fix_clone = gen_fix.copy()
-    bit_pop = gex_fix_clone[idx_min]
-    gex_fix_clone.pop(idx_min)
+    
+    gex_fix_clone = gen_fix.copy() #clone gen cần fix ra để thử fix
+    bit_pop = gex_fix_clone[idx_min]  #giá trị bit lấy ra của gen gần fix
+    gex_fix_clone.pop(idx_min)        #xóa bit nhỏ nhất trong gen cần fix đã clone
 
-    if (sum_gen(gex_fix_clone, suppliers) > capacity):
-        return [False, individual]
+    #kiểm tra gen sau khi lấy bit nhỏ nhất ra thỏa capacity hay không trong 2 trường hợp
+    if(idx_gen == 0):
+        if (sum_gen(gex_fix_clone, suppliers) > current_capacity):  
+            return [False, individual]
+    else:
+        if (sum_gen(gex_fix_clone, suppliers) > capacity):  
+            return [False, individual]
 
-    # print('debug')
-    # individual[idx_gen] = gex_fix_clone
-
+    #thêm bit pop từ gen fix vào các gen khác
     for idx, gen in enumerate(individual):
         if (idx == idx_gen):
             continue
         gen_clone = gen.copy()
         gen_clone.append(bit_pop)
-
-        if (sum_gen(gen_clone, suppliers) < capacity):
-
-            individual[idx] = gen_clone
-            individual[idx_gen] = gex_fix_clone
-            return [True, individual]
+        if idx == 0:
+            if (sum_gen(gen_clone, suppliers) < current_capacity):
+                individual[idx] = gen_clone
+                individual[idx_gen] = gex_fix_clone
+                return [True, individual]
+        else:
+            if (sum_gen(gen_clone, suppliers) < capacity):
+                individual[idx] = gen_clone
+                individual[idx_gen] = gex_fix_clone
+                return [True, individual]
 
     return [False, individual]
 
@@ -75,13 +96,26 @@ def getRamdomIndex(individual):
 
     return [random1, random2]
 
-def evaluate(individual, capacity, suppliers):
+def evaluate(individual, capacity, suppliers, current_capacity = 0):
+    
+    if(current_capacity == 0):
+        current_capacity = capacity
+
+    idx = 0
     for gen in individual:
-        sum = 0
-        for bit in gen:
-            sum = sum + suppliers[bit]
-            if (sum > capacity):
-                return -1
+        if(idx == 0):
+            sum = 0
+            for bit in gen:
+                sum = sum + suppliers[bit]
+                if (sum > current_capacity):
+                    return -1
+        else:
+            sum = 0
+            for bit in gen:
+                sum = sum + suppliers[bit]
+                if (sum > capacity):
+                    return -1
+        idx = idx + 1
     return len(individual)
 
 def makeF0(suppliers, capacity, n_max):
@@ -124,7 +158,7 @@ def getRandomTwoIndividual(populations):
    
     return [copy.deepcopy(populations[random1]), copy.deepcopy(populations[random2])]
 
-def enhance(individual,capacity, suppliers):
+def enhance(individual,capacity, suppliers,current_capacity):
 
     individual = copy.deepcopy(individual)
 
@@ -137,8 +171,8 @@ def enhance(individual,capacity, suppliers):
     individual[idx_gen-1] = individual[idx_gen] + individual[idx_gen-1]
     individual.pop(idx_gen)
 
-    if (evaluate(individual, capacity, suppliers) == -1):
-        return fix(individual,suppliers,capacity)
+    if (evaluate(individual, capacity, suppliers,current_capacity) == -1):
+        return fix(individual,suppliers,capacity,current_capacity)
     else:
         return [True, individual]
     

@@ -13,7 +13,7 @@ capacity = 5
 
 
 
-def mutation(individual,capacity,suppliers):
+def mutation(individual,capacity,suppliers,current_capacity):
     #return new individual (deep copy)
     individual = copy.deepcopy(individual) 
 
@@ -28,8 +28,8 @@ def mutation(individual,capacity,suppliers):
     individual[random2[0]][random2[1]] = temp
 
     fix_individual = [True, individual]
-    if( utils.evaluate(individual,capacity,suppliers) == -1):
-        fix_individual = utils.fix(individual,suppliers,capacity)
+    if( utils.evaluate(individual,capacity,suppliers,current_capacity) == -1):
+        fix_individual = utils.fix(individual,suppliers,capacity,current_capacity)
     
     if(fix_individual[0]):
         return fix_individual

@@ -1,11 +1,7 @@
 import random
 import copy
-
-individual1 = [['Adidas', 'Converse'], ['Vans'], ['Ananas']]
-individual2 = [['Adidas'], ['Vans'], ['Converse', 'Ananas']]
-individual3 = [['Adidas'], ['Converse'], ['Vans'], ['Ananas']]
-
-F0 = [individual1, individual2, individual3]
+import pandas as pd
+import csv
 
 def sum_gen(gen, suppliers):
     sum = 0
@@ -118,22 +114,33 @@ def evaluate(individual, capacity, suppliers, current_capacity = 0):
         idx = idx + 1
     return len(individual)
 
-def makeF0(suppliers, capacity, n_max):
+def makeF0(suppliers, capacity,current_capacity, n_max):
     F0 = []
     all_suppliers = list(suppliers.keys())
 
-    len_suppliers = len(all_suppliers)
-
+    idx_gen = 0
     for idx1, supplier1 in enumerate(all_suppliers):
         for idx2, supplier2 in enumerate(all_suppliers):
-            if (suppliers[supplier1] + suppliers[supplier1] < capacity and idx1 != idx2):
-                individual = []
-                for supplier3 in all_suppliers:
-                    if supplier3 != supplier1 and supplier3 != supplier2:
-                        individual.append([supplier3])
-                    elif supplier3 == supplier1:
-                        individual.append([supplier1, supplier2])
-                F0.append(individual)
+            if idx_gen == 0:
+                if (suppliers[supplier1] + suppliers[supplier1] < current_capacity and idx1 != idx2):
+                    individual = []
+                    for supplier3 in all_suppliers:
+                        if supplier3 != supplier1 and supplier3 != supplier2:
+                            individual.append([supplier3])
+                        elif supplier3 == supplier1:
+                            individual.append([supplier1, supplier2])
+                    idx_gen = idx_gen + 1
+                    F0.append(individual)
+            else:
+                if (suppliers[supplier1] + suppliers[supplier1] < capacity and idx1 != idx2):
+                    individual = []
+                    for supplier3 in all_suppliers:
+                        if supplier3 != supplier1 and supplier3 != supplier2:
+                            individual.append([supplier3])
+                        elif supplier3 == supplier1:
+                            individual.append([supplier1, supplier2])
+                    idx_gen = idx_gen + 1
+                    F0.append(individual)
 
     return F0[:n_max]
 
@@ -179,3 +186,38 @@ def enhance(individual,capacity, suppliers,current_capacity):
 def getScore(individual):         #Đếm số ngày trong plan đó
     return len(individual)
 
+def read_file(file_path):
+
+    df = pd.read_csv(file_path)
+
+    return df.to_dict('records')
+
+def read_input(file_path):
+    input = read_file("./input/input1.csv")[0]
+    capacity = input["capacity"]
+    current_capacity=  input["current_capacity"]
+    input.pop("capacity")
+    input.pop("current_capacity")
+    suppliers = input
+
+    flag = True
+    for supplier in suppliers:
+        if suppliers[supplier] <= current_capacity:
+            flag = False
+
+    if(flag):
+        raise "Quay xe"
+    return [capacity,current_capacity,suppliers]
+
+def write_output(output,file_path):
+
+    with open(file_path,'w') as f:
+        for individual in output:
+            f.write(str(len(individual)))
+            f.write('\n')
+            for gen in individual:
+                for bit in gen:
+                    f.write(bit + ',')
+                f.write('\n')
+
+            f.write('\n')

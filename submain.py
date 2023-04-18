@@ -64,8 +64,9 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0):
+def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0):
 
+    n_muation = int(n_muation * len(population))
     Fi = population
     count = 1
     
@@ -75,7 +76,15 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_sel
     for _ in range(n_GA):
         Fi = copy.deepcopy(Fi)
         Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
+
+        if(len(Fi) >=n_fix):
+            Fi= Fi[:n_fix]
+
         Fi = mutation_population(Fi,capacity,suppliers,n_muation,current_capacity)[1]
+
+        if(len(Fi) >=n_fix):
+            Fi= Fi[:n_fix]
+        
         Fi = enhance_population(Fi,capacity,suppliers,n_enhance,current_capacity)[1]
         Fi = selection_population(Fi,n_selection)
     

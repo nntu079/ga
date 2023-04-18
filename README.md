@@ -9,3 +9,7 @@ Please cứu me fix những chỗ này:
 # Tú ghi chú 13/4/2023
 Đã xong thay đổi Quantity của supplier
 Đã xong Đọc input & xuất output qua Excel
+# Tú ghi chú 19/4/2023
+Đã xong CROSSOVER theo Logic của Anh
+Sửa con số này thành %: n_mutation (free)
+Cố định số lượng quần thể, 

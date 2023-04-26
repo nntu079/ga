@@ -17,6 +17,8 @@ def mutation(individual,capacity,suppliers,current_capacity):
     #return new individual (deep copy)
     individual = copy.deepcopy(individual) 
 
+    #print(individual)
+
     random1 = utils.getRamdomIndex(individual)
     random2 = utils.getRamdomIndex(individual)
 

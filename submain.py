@@ -30,6 +30,10 @@ def crossover_population(population, capacity, suppliers, n_cross, current_capac
             count = count + 1
             population.append(child2)
 
+    for individual in population:
+        for index,gen in  enumerate(individual):
+            if (len(gen)==0):
+                del individual[index]
     return [count,population]
 
 def mutation_population(population, capacity, suppliers, n_muation,current_capacity):
@@ -45,8 +49,14 @@ def mutation_population(population, capacity, suppliers, n_muation,current_capac
 
 def enhance_population(population,capacity,suppliers, n_enhance,current_capacity):
     count = 0
+
     for _ in range(0,n_enhance):
         [new_individual,index] = utils.getRandomIndividual(population,True)
+        
+        for index,gen in  enumerate(new_individual):
+            if (len(gen)==0):
+                del new_individual[index]
+
         [can_enhance,new_individual] = utils.enhance(new_individual,capacity,suppliers,current_capacity)
         
         if(can_enhance and len(new_individual) !=0):
@@ -55,6 +65,7 @@ def enhance_population(population,capacity,suppliers, n_enhance,current_capacity
 
             population.append(new_individual)
             count = count + 1
+    
     return [count,population]
 
 def selection_population(population,n_selection):
@@ -74,17 +85,24 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
         f = open(output, "w")
 
     for _ in range(n_GA):
+        
+
         Fi = copy.deepcopy(Fi)
+
+        #print(Fi)
+
         Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
 
         if(len(Fi) >=n_fix):
             Fi= Fi[:n_fix]
+        
+        
 
         Fi = mutation_population(Fi,capacity,suppliers,n_muation,current_capacity)[1]
-
+       
         if(len(Fi) >=n_fix):
             Fi= Fi[:n_fix]
-        
+       
         Fi = enhance_population(Fi,capacity,suppliers,n_enhance,current_capacity)[1]
         Fi = selection_population(Fi,n_selection)
     

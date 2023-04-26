@@ -1,33 +1,59 @@
 GENERATION 1
-[['Vans'], ['Adidas', 'Converse', 'Bitis', 'Ananas']] ===> Days required: 2
-[['Adidas', 'Vans'], ['Bitis', 'Ananas', 'Converse']] ===> Days required: 2
-[['Adidas', 'Converse'], ['Bitis', 'Ananas', 'Vans']] ===> Days required: 2
-[['Vans', 'Converse', 'Adidas'], ['Ananas'], ['Bitis']] ===> Days required: 3
-[['Converse', 'Adidas'], ['Vans'], ['Bitis', 'Ananas']] ===> Days required: 3
-[['Vans', 'Converse', 'Adidas'], ['Ananas'], ['Bitis']] ===> Days required: 3
-[['Converse'], ['Vans'], ['Adidas', 'Bitis', 'Ananas']] ===> Days required: 3
-[['Adidas', 'Vans'], ['Converse'], ['Ananas'], ['Bitis']] ===> Days required: 4
-[['Adidas', 'Ananas'], ['Converse'], ['Vans'], ['Bitis']] ===> Days required: 4
-[['Adidas', 'Ananas'], ['Converse'], ['Vans'], ['Bitis']] ===> Days required: 4
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[['4', '2'], ['8'], ['9'], ['10', '6']] ===> Days required: 4
+[['4', '2'], ['8'], ['9'], ['10', '6']] ===> Days required: 4
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[[], ['4', '2'], ['6'], ['10', '9', '8']] ===> Days required: 4
+[[], ['4', '2'], ['6'], ['10', '9', '8']] ===> Days required: 4
+[[], ['6', '4'], ['9', '8'], ['10', '2']] ===> Days required: 4
+[[], ['6', '2'], ['8'], ['10', '4', '9']] ===> Days required: 4
+[[], ['6', '4'], ['9'], ['2', '10', '8']] ===> Days required: 4
+[[], ['6', '2'], ['8'], ['10', '4', '9']] ===> Days required: 4
+[[], ['8', '6', '2'], ['9'], ['10', '4']] ===> Days required: 4
+[['4'], ['6'], ['8'], ['9'], ['10', '2']] ===> Days required: 5
+[['2'], ['6'], ['8'], ['9'], ['10', '4']] ===> Days required: 5
+[['2'], ['4'], ['8'], ['9'], ['10', '6']] ===> Days required: 5
+[['2'], ['4'], ['6'], ['9'], ['10', '8']] ===> Days required: 5
+[['2'], ['4'], ['6'], ['8'], ['10', '9']] ===> Days required: 5
 GENERATION 2
-[['Bitis', 'Ananas', 'Vans', 'Converse', 'Adidas']] ===> Days required: 1
-[['Adidas', 'Vans', 'Bitis', 'Ananas', 'Converse']] ===> Days required: 1
-[['Vans'], ['Adidas', 'Converse', 'Bitis', 'Ananas']] ===> Days required: 2
-[['Adidas', 'Converse'], ['Bitis', 'Ananas', 'Vans']] ===> Days required: 2
-[['Vans', 'Converse', 'Adidas'], ['Bitis', 'Ananas']] ===> Days required: 2
-[['Vans', 'Converse', 'Adidas', 'Ananas'], ['Bitis']] ===> Days required: 2
-[['Vans', 'Converse', 'Adidas'], ['Bitis', 'Ananas']] ===> Days required: 2
-[['Converse'], ['Vans'], ['Adidas', 'Bitis', 'Ananas']] ===> Days required: 3
-[['Converse'], ['Vans'], ['Adidas', 'Ananas', 'Bitis']] ===> Days required: 3
-[['Adidas', 'Vans'], ['Converse'], ['Ananas'], ['Bitis']] ===> Days required: 4
+[['6', '4'], ['9', '8'], ['10', '2']] ===> Days required: 3
+[['6', '2'], ['8'], ['10', '4', '9']] ===> Days required: 3
+[['6', '4'], ['9'], ['2', '10', '8']] ===> Days required: 3
+[['6', '2'], ['8'], ['10', '4', '9']] ===> Days required: 3
+[['8', '6', '2'], ['9'], ['10', '4']] ===> Days required: 3
+[['6', '4'], ['9'], ['8', '10', '2']] ===> Days required: 3
+[['4', '2'], ['6', '10'], ['9', '8']] ===> Days required: 3
+[['4', '2'], ['8'], ['9', '10', '6']] ===> Days required: 3
+[['6', '4'], ['9'], ['2', '10', '8']] ===> Days required: 3
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[['4', '2'], ['8'], ['9'], ['10', '6']] ===> Days required: 4
+[['4', '2'], ['8'], ['9'], ['10', '6']] ===> Days required: 4
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[['4', '2'], ['6'], ['8', '10'], ['9']] ===> Days required: 4
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[['4', '2'], ['8'], ['9', '10'], ['6']] ===> Days required: 4
+[['6', '4'], ['9'], ['2'], ['10', '8']] ===> Days required: 4
+[['6', '4'], ['9'], ['2'], ['10', '8']] ===> Days required: 4
+[[], ['6', '4'], ['9', '2'], ['10', '8']] ===> Days required: 4
+[[], ['8', '6'], ['9'], ['2', '10', '4']] ===> Days required: 4
 GENERATION 3
-[['Bitis', 'Ananas', 'Vans', 'Converse', 'Adidas']] ===> Days required: 1
-[['Adidas', 'Vans', 'Bitis', 'Ananas', 'Converse']] ===> Days required: 1
-[['Bitis', 'Ananas', 'Vans', 'Converse', 'Adidas']] ===> Days required: 1
-[['Vans', 'Converse', 'Adidas', 'Bitis', 'Ananas']] ===> Days required: 1
-[['Adidas', 'Converse', 'Bitis', 'Ananas', 'Vans']] ===> Days required: 1
-[['Adidas', 'Converse'], ['Bitis', 'Ananas', 'Vans']] ===> Days required: 2
-[['Vans', 'Converse', 'Adidas', 'Ananas'], ['Bitis']] ===> Days required: 2
-[['Vans', 'Converse', 'Adidas'], ['Bitis', 'Ananas']] ===> Days required: 2
-[['Vans'], ['Converse', 'Adidas', 'Ananas', 'Bitis']] ===> Days required: 2
-[['Adidas', 'Vans'], ['Converse'], ['Ananas'], ['Bitis']] ===> Days required: 4
+[['6', '4'], ['9', '8'], ['10', '2']] ===> Days required: 3
+[['6', '2'], ['8'], ['10', '4', '9']] ===> Days required: 3
+[['6', '4'], ['9'], ['2', '10', '8']] ===> Days required: 3
+[['8', '6', '2'], ['9'], ['10', '4']] ===> Days required: 3
+[['6', '4'], ['9'], ['8', '10', '2']] ===> Days required: 3
+[['4', '2'], ['6', '10'], ['9', '8']] ===> Days required: 3
+[['4', '2'], ['8'], ['9', '10', '6']] ===> Days required: 3
+[['6', '4'], ['9'], ['2', '10', '8']] ===> Days required: 3
+[['6', '4'], ['9', '2'], ['10', '8']] ===> Days required: 3
+[['8', '6'], ['9'], ['2', '10', '4']] ===> Days required: 3
+[[], ['8', '10', '6'], ['4', '2', '9']] ===> Days required: 3
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[['4', '2'], ['8'], ['9'], ['10', '6']] ===> Days required: 4
+[['4', '2'], ['8'], ['9'], ['10', '6']] ===> Days required: 4
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[['4', '2'], ['6'], ['8', '10'], ['9']] ===> Days required: 4
+[['4', '2'], ['6'], ['8'], ['10', '9']] ===> Days required: 4
+[['4', '2'], ['8'], ['9', '10'], ['6']] ===> Days required: 4
+[['6', '4'], ['9'], ['2'], ['10', '8']] ===> Days required: 4
+[['6', '4'], ['9'], ['2'], ['10', '8']] ===> Days required: 4

@@ -78,6 +78,8 @@ def selection_population(population,n_selection):
 def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0):
 
     n_muation = int(n_muation * len(population))
+    n_enhance = int(n_enhance * len(population))
+
     Fi = population
     count = 1
     

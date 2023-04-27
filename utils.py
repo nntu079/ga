@@ -3,6 +3,8 @@ import copy
 import pandas as pd
 import csv
 import numpy as np
+import itertools
+
 
 def sum_gen(gen, suppliers):
     sum = 0
@@ -119,30 +121,27 @@ def makeF0(suppliers, capacity,current_capacity, n_max):
     F0 = []
     all_suppliers = list(suppliers.keys())
 
-    idx_gen = 0
-    for idx1, supplier1 in enumerate(all_suppliers):
-        for idx2, supplier2 in enumerate(all_suppliers):
-            if idx_gen == 0:
-                if (suppliers[supplier1] + suppliers[supplier1] < current_capacity and idx1 != idx2):
-                    individual = []
-                    for supplier3 in all_suppliers:
-                        if supplier3 != supplier1 and supplier3 != supplier2:
-                            individual.append([supplier3])
-                        elif supplier3 == supplier1:
-                            individual.append([supplier1, supplier2])
-                    idx_gen = idx_gen + 1
-                    F0.append(individual)
-            else:
-                if (suppliers[supplier1] + suppliers[supplier1] < capacity and idx1 != idx2):
-                    individual = []
-                    for supplier3 in all_suppliers:
-                        if supplier3 != supplier1 and supplier3 != supplier2:
-                            individual.append([supplier3])
-                        elif supplier3 == supplier1:
-                            individual.append([supplier1, supplier2])
-                    idx_gen = idx_gen + 1
-                    F0.append(individual)
-
+    set_current_capacity = []
+    for sup in all_suppliers:
+        if(suppliers[sup] <= current_capacity):
+            set_current_capacity.append(sup)
+    
+    for sup1 in set_current_capacity:
+       
+       
+        temp = []
+        for sup in all_suppliers:
+            if(sup != sup1):
+                temp.append(sup)
+     
+        temp2 = itertools.permutations(temp)
+      
+        for half_individual in temp2:
+            individual = [[sup1]]
+            for gen in half_individual:
+                individual.append([gen])
+            F0.append(individual)
+            
     return F0[:n_max]
 
 def getRandomIndividual(populations,getIndex= False):

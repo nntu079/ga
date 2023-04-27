@@ -11,14 +11,14 @@ F0 = utils.makeF0(
 
 ga = submain.GA(
     population = F0,
-    n_fix = 100,
     capacity = capacity,
     suppliers = suppliers,
-    n_GA = 3,
-    n_cross = 5,
+    n_fix = 100,
+    n_GA = 4,
+    n_cross = 10,
+    n_selection = 50,
     n_muation = 0.3,
-    n_enhance = 20,
-    n_selection = 20,
+    n_enhance = 0.8,
     output = "output.txt",
     current_capacity = current_capacity
 )

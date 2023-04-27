@@ -121,6 +121,30 @@ def makeF0(suppliers, capacity,current_capacity, n_max):
     F0 = []
     all_suppliers = list(suppliers.keys())
 
+    idx_gen = 0
+    for idx1, supplier1 in enumerate(all_suppliers):
+        for idx2, supplier2 in enumerate(all_suppliers):
+            if idx_gen == 0:
+                if (suppliers[supplier1] + suppliers[supplier2] < current_capacity and idx1 != idx2):
+                    individual = []
+                    for supplier3 in all_suppliers:
+                        if supplier3 != supplier1 and supplier3 != supplier2:
+                            individual.append([supplier3])
+                        elif supplier3 == supplier1:
+                            individual.append([supplier1, supplier2])
+                    idx_gen = idx_gen + 1
+                    F0.append(individual)
+            else:
+                if (suppliers[supplier1] + suppliers[supplier2] < capacity and idx1 != idx2):
+                    individual = []
+                    for supplier3 in all_suppliers:
+                        if supplier3 != supplier1 and supplier3 != supplier2:
+                            individual.append([supplier3])
+                        elif supplier3 == supplier1:
+                            individual.append([supplier1, supplier2])
+                    idx_gen = idx_gen + 1
+                    F0.append(individual)
+
     set_current_capacity = []
     for sup in all_suppliers:
         if(suppliers[sup] <= current_capacity):
@@ -154,6 +178,9 @@ def getRandomIndividual(populations,getIndex= False):
     return copy.deepcopy(populations[random_index])
 
 def getRandomTwoIndividual(populations):
+ 
+    if(len(populations) == 1):
+        raise ValueError('Chỉ còn đúng 1 cách.')
 
     len_populations = len(populations)
     

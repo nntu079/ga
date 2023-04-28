@@ -180,7 +180,7 @@ def getRandomIndividual(populations,getIndex= False):
 def getRandomTwoIndividual(populations):
  
     if(len(populations) == 1):
-        raise ValueError('Chỉ còn đúng 1 cách.')
+        raise ValueError('There is only one supplier left')
 
     len_populations = len(populations)
     
@@ -233,7 +233,7 @@ def read_input(file_path):
             flag = False
 
     if(flag):
-        raise "Quay xe"
+        raise "Please move to the next day. Capacity returns to the original"
     return [capacity,current_capacity,suppliers]
 
 def write_output(output,file_path):

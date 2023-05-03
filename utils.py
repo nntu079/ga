@@ -101,7 +101,10 @@ def evaluate(individual, capacity, suppliers, current_capacity = 0):
         current_capacity = capacity
 
     idx = 0
-    for gen in individual:
+    for gen in individual:             #gen là số ngày
+                                       #idx là số thứ tự của supplier trong ngày/gen đó
+                                       #ứng với mỗi idx là tên của supplier/bit
+                                       #supplier[bit] là stock của supplier
         if(idx == 0):
             sum = 0
             for bit in gen:

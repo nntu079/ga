@@ -96,6 +96,7 @@ def getRamdomIndex(individual):
     return [random1, random2]
 
 def evaluate(individual, capacity, suppliers, current_capacity = 0):
+
     
     if(current_capacity == 0):
         current_capacity = capacity

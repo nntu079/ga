@@ -79,6 +79,7 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
 
     n_muation = int(n_muation * len(population))
     n_enhance = int(n_enhance * len(population))
+    n_selection = int(n_selection * len(population))
 
     Fi = population
     count = 1

@@ -2,17 +2,6 @@ import utils
 import copy
 
 
-individual = [['Adidas', 'Converse'], ['Vans'], ['Ananas']]
-suppliers = {
-    'Adidas': 2,
-    'Converse': 2,
-    'Vans': 4,
-    'Ananas': 1,
-}
-capacity = 5
-
-
-
 def mutation(individual,capacity,suppliers,current_capacity):
     #return new individual (deep copy)
     individual = copy.deepcopy(individual) 

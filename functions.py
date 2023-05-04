@@ -76,36 +76,3 @@ def crossover1(individual1,individual2):
     
 def crossover(indv1,indv2):
     return [crossover1(indv1,indv2),crossover1(indv2,indv1)]
-
-
-#def crossover(individual1, individual2):
-#    index1 = utils.getRamdomIndex(individual1)
-#    index2 = utils.getRamdomIndex(individual2)
-
-#    bit1 = individual1[index1[0]][index1[1]]
-#    bit2 = individual2[index2[0]][index2[1]]
-
-    newIndividual1 = copy.deepcopy(individual1)
-#    newIndividual2 = copy.deepcopy(individual2)
-    
-    for i1 in range(0, len(individual1)):
-        for i2 in range(0, len(individual1[i1])):
-            if (individual1[i1][i2] == bit1):
-                newIndividual1[i1][i2] = bit2
-            elif (individual1[i1][i2] == bit2):
-                newIndividual1[i1][i2] = bit1
-
-    for i1 in range(0, len(individual2)):
-        for i2 in range(0, len(individual2[i1])):
-            if (individual2[i1][i2] == bit1):
-                newIndividual2[i1][i2] = bit2
-            elif (individual2[i1][i2] == bit2):
-                newIndividual2[i1][i2] = bit1
-
-    #if(newIndividual1 == individual1):
-    #    newIndividual1 = []
-    #if(newIndividual2 == individual2):
-    #    newIndividual2 = []
-
-    return [newIndividual1,newIndividual2]
-

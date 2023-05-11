@@ -280,3 +280,6 @@ def inscrease_population(Fi,suppliers,capacity,current_capacity, n_max):
             Fi.append(individual)
 
     return Fi[:n_max]
+
+a= [1,2,3]
+print(a[-1])

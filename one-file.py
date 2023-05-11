@@ -51,11 +51,10 @@ def fix(individual, suppliers, capacity,current_capacity):
         if suppliers[bit] < min_bit_value:
             min_bit_value = suppliers[bit]
             idx_min = idx
-
     
     gen_fix_clone = gen_fix.copy()     #clone gen cần fix ra để thử fix
     bit_pop = gen_fix_clone[idx_min]  #giá trị bit lấy ra của gen gần fix
-    gen_fix_clone.pop(idx_min)        #xóa bit nhỏ nhất trong gen cần fix đã clone
+    gen_fix_clone.pop(idx_min)        #xóa bit nhỏ nhất trong gen cần fix đã clone    #.pop = lấy ra
 
     #kiểm tra gen sau khi lấy bit nhỏ nhất ra thỏa capacity hay không trong 2 trường hợp
     if(idx_gen == 0):
@@ -70,7 +69,7 @@ def fix(individual, suppliers, capacity,current_capacity):
         if (idx == idx_gen):
             continue
         gen_clone = gen.copy()
-        gen_clone.append(bit_pop)
+        gen_clone.append(bit_pop)     #.append: thêm ==> thêm supplier bị cắt vào gen đang xét
         if idx == 0:
             if (sum_gen(gen_clone, suppliers) < current_capacity):
                 individual[idx] = gen_clone
@@ -86,9 +85,7 @@ def fix(individual, suppliers, capacity,current_capacity):
 
 def getRamdomIndex(individual):
     len1 = len(individual)
- 
- 
-    random1 = random.randint(0, len1-1)
+    random1 = random.randint(0, len1-1)   #chọn ngẫu nhiên số thứ tự từ 0 tới len-1
 
     len2 = len(individual[random1])
     random2 = random.randint(0, len2-1)
@@ -96,7 +93,6 @@ def getRamdomIndex(individual):
     return [random1, random2]
 
 def evaluate(individual, capacity, suppliers, current_capacity = 0):
-
     
     if(current_capacity == 0):
         current_capacity = capacity
@@ -121,7 +117,7 @@ def evaluate(individual, capacity, suppliers, current_capacity = 0):
         idx = idx + 1
     return len(individual)
 
-def makeF0(suppliers, capacity,current_capacity, n_max):
+def makeF0(suppliers, capacity,current_capacity, n_max):    #CHƯA GIẢNG
     F0 = []
     all_suppliers = list(suppliers.keys())
 
@@ -172,7 +168,7 @@ def makeF0(suppliers, capacity,current_capacity, n_max):
             
     return F0[:n_max]
 
-def getRandomIndividual(populations,getIndex= False):
+def getRandomIndividual(populations,getIndex= False):   #trong mutation
     len_populations = len(populations)
     random_index = random.randint(0, len_populations-1)
 
@@ -196,7 +192,7 @@ def getRandomTwoIndividual(populations):
    
     return [copy.deepcopy(populations[random1]), copy.deepcopy(populations[random2])]
 
-def enhance(individual,capacity, suppliers,current_capacity):
+def enhance(individual,capacity, suppliers,current_capacity): 
 
     individual = copy.deepcopy(individual)
 
@@ -205,11 +201,10 @@ def enhance(individual,capacity, suppliers,current_capacity):
 
     idx_gen = getRamdomIndex(individual)[0]
 
-
     individual[idx_gen-1] = individual[idx_gen] + individual[idx_gen-1]
     individual.pop(idx_gen)
 
-    if (evaluate(individual, capacity, suppliers,current_capacity) == -1):
+    if (evaluate(individual, capacity, suppliers,current_capacity) == -1):  #vị trí -1 là vị trí cuối
         return fix(individual,suppliers,capacity,current_capacity)
     else:
         return [True, individual]
@@ -253,14 +248,14 @@ def write_output(output,file_path):
 
             f.write('\n')
 
-def inscrease_population(Fi,suppliers,capacity,current_capacity, n_max):
+def increase_population(Fi,suppliers,capacity,current_capacity, n_max):
     F0 = makeF0(suppliers,capacity,current_capacity,n_max)
 
     for individual in F0:
         if individual not in Fi:
             Fi.append(individual)
 
-    return Fi[:n_max]
+    return Fi[:n_max]     #ghi tắt của [0:n_max]
 
 ########### functions ########
 
@@ -409,16 +404,15 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
     Fi = population
     count = 1
     
-    if(output != ""):
+    if(output != ""):       #nếu output khác rỗng (rỗng: ko có data) thì mở file output
         f = open(output, "w")
 
     for _ in range(n_GA):
         
-
         Fi = copy.deepcopy(Fi)
         #tăng dân số
         if(len(Fi) <= n_fix):
-            Fi= inscrease_population(Fi,suppliers,capacity,current_capacity,n_fix)
+            Fi= increase_population(Fi,suppliers,capacity,current_capacity,n_fix)
 
         Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
 
@@ -455,16 +449,16 @@ F0 = makeF0(
     suppliers = suppliers,
     capacity = capacity,
     current_capacity = current_capacity,
-    n_max=20
+    n_max=100
 )
 
 ga = GA(
     population = F0,
     capacity = capacity,
     suppliers = suppliers,
-    n_fix = 50,
+    n_fix = 100,
     n_selection = 0.5,
-    n_GA = 100,
+    n_GA = 20,
     n_cross = 40,
     n_muation = 0.25,
     n_enhance = 0.5,

@@ -253,6 +253,15 @@ def write_output(output,file_path):
 
             f.write('\n')
 
+def inscrease_population(Fi,suppliers,capacity,current_capacity, n_max):
+    F0 = makeF0(suppliers,capacity,current_capacity,n_max)
+
+    for individual in F0:
+        if individual not in Fi:
+            Fi.append(individual)
+
+    return Fi[:n_max]
+
 ########### functions ########
 
 def mutation(individual,capacity,suppliers,current_capacity):
@@ -407,6 +416,9 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
         
 
         Fi = copy.deepcopy(Fi)
+        #tăng dân số
+        if(len(Fi) <= n_fix):
+            Fi= inscrease_population(Fi,suppliers,capacity,current_capacity,n_fix)
 
         Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
 
@@ -451,7 +463,7 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     n_fix = 50,
-    n_selection = 0.25,
+    n_selection = 0.5,
     n_GA = 100,
     n_cross = 40,
     n_muation = 0.25,

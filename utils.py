@@ -252,3 +252,31 @@ def write_output(output,file_path):
                 f.write('\n')
 
             f.write('\n')
+
+
+suppliers = {
+    'A':15,
+    'B':22,
+    'C':33
+}
+
+capacity = 50
+current_capacity = 50
+n_max = 100
+
+F0 = makeF0(suppliers=suppliers,capacity=capacity,current_capacity=current_capacity,n_max=n_max)
+
+#print(F0)
+current_population = [
+      [['A','C'],['B']], 
+      [['A','C'],['A']]
+]
+
+def inscrease_population(Fi,suppliers,capacity,current_capacity, n_max):
+    F0 = makeF0(suppliers,capacity,current_capacity,n_max)
+
+    for individual in F0:
+        if individual not in Fi:
+            Fi.append(individual)
+
+    return Fi[:n_max]

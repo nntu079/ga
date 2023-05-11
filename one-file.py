@@ -6,27 +6,27 @@ import itertools
 
 ############### UTILS #############
 
-def sum_gen(gen, suppliers):
+def sum_gen(gen, suppliers):     #tính tổng supplier trong 1 ngày bất kì
     sum = 0
     for bit in gen:
         sum = sum + suppliers[bit]
 
     return sum
 
-def cloneIndividual(individual):
+def cloneIndividual(individual):       #nhân bản 1 con bất kì
     return copy.deepcopy(individual)
 
-def fix(individual, suppliers, capacity,current_capacity):
+def fix(individual, suppliers, capacity,current_capacity):       
     count = 0
-    idx_gen = -1
-
+    idx_gen = -1           #chưa biết gen thứ mấy nên tạm để -1
+                           #idx: thứ tự của bit trong 1 gen
     #đếm số gen cần fix, >=2 => từ chối fix
-    for idx, gen in enumerate(individual):      #enumrate là vòng lặp vừa lấy chỉ số vừa lấy giá trị
+    for idx, gen in enumerate(individual):      #enumrate là vòng lặp vừa lấy chỉ số vừa lấy giá trị, lấy đoạn gen có thứ tự là idx
         if(idx == 0):
             sum = 0
             for bit in gen:
                 sum = sum + suppliers[bit]
-                if (sum > current_capacity):
+                if (sum > current_capacity):     #tìm đoạn gen có tổng stock > cap -> thứ tự của gen/ngày đó
                     idx_gen = idx
                     count = count + 1
                     if (count >= 2):
@@ -43,8 +43,8 @@ def fix(individual, suppliers, capacity,current_capacity):
 
     #idx_gen vị trí gen cần fix
     idx_min = 0
-    gen_fix = individual[idx_gen]
-    min_bit_value = suppliers[gen_fix[idx_min]] #bit nhỏ nhất trong gen
+    gen_fix = individual[idx_gen]        #bóc đoạn gen có thứ tự idx_gen trong individual
+    min_bit_value = suppliers[gen_fix[idx_min]]       #bit nhỏ nhất trong gen
 
     #tìm idx_min vị trí bit, min_bit_value giá trị bit của bit nhỏ nhất tron gen cần fix
     for idx, bit in enumerate(gen_fix): 
@@ -53,16 +53,16 @@ def fix(individual, suppliers, capacity,current_capacity):
             idx_min = idx
 
     
-    gex_fix_clone = gen_fix.copy() #clone gen cần fix ra để thử fix
-    bit_pop = gex_fix_clone[idx_min]  #giá trị bit lấy ra của gen gần fix
-    gex_fix_clone.pop(idx_min)        #xóa bit nhỏ nhất trong gen cần fix đã clone
+    gen_fix_clone = gen_fix.copy()     #clone gen cần fix ra để thử fix
+    bit_pop = gen_fix_clone[idx_min]  #giá trị bit lấy ra của gen gần fix
+    gen_fix_clone.pop(idx_min)        #xóa bit nhỏ nhất trong gen cần fix đã clone
 
     #kiểm tra gen sau khi lấy bit nhỏ nhất ra thỏa capacity hay không trong 2 trường hợp
     if(idx_gen == 0):
-        if (sum_gen(gex_fix_clone, suppliers) > current_capacity):  
+        if (sum_gen(gen_fix_clone, suppliers) > current_capacity):  
             return [False, individual]
     else:
-        if (sum_gen(gex_fix_clone, suppliers) > capacity):  
+        if (sum_gen(gen_fix_clone, suppliers) > capacity):  
             return [False, individual]
 
     #thêm bit pop từ gen fix vào các gen khác
@@ -74,12 +74,12 @@ def fix(individual, suppliers, capacity,current_capacity):
         if idx == 0:
             if (sum_gen(gen_clone, suppliers) < current_capacity):
                 individual[idx] = gen_clone
-                individual[idx_gen] = gex_fix_clone
+                individual[idx_gen] = gen_fix_clone
                 return [True, individual]
         else:
             if (sum_gen(gen_clone, suppliers) < capacity):
                 individual[idx] = gen_clone
-                individual[idx_gen] = gex_fix_clone
+                individual[idx_gen] = gen_fix_clone
                 return [True, individual]
 
     return [False, individual]

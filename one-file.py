@@ -328,6 +328,8 @@ def crossover_population(population, capacity, suppliers, n_cross, current_capac
         current_capacity = capacity
 
     count = 0
+    n_cross =int(n_cross * len(population)/2)
+
     for _ in range(0, n_cross):
         [individual1, individual2] = getRandomTwoIndividual(population)
         [child1, child2] = crossover(individual1, individual2)

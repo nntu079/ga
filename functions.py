@@ -33,8 +33,8 @@ def mutation(individual,capacity,suppliers,current_capacity):
 def crossover(individual1, individual2):
     index1 = utils.getRamdomIndex(individual1)
     index2 = utils.getRamdomIndex(individual2)
-    print(index1)
-    print(index2)
+    #print(index1)
+    #print(index2)
 
     bit1 = individual1[index1[0]][index1[1]]
     bit2 = individual2[index2[0]][index2[1]]

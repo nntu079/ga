@@ -29,9 +29,10 @@ def crossover(individual1, individual2):
 
     bit_map1 = {}
 
-    for i in range(random_index1,random_index2+1):
-        bit_map1[clone_new_individua1[i]]= clone_new_individua2[i]
-        bit_map1[clone_new_individua2[i]]= clone_new_individua1[i]
+    for i in range(random_index1,random_index2 + 1):
+        if clone_new_individua1[i] not in bit_map1:
+            bit_map1[clone_new_individua1[i]]= clone_new_individua2[i]
+            bit_map1[clone_new_individua2[i]]= clone_new_individua1[i]
 
     for index,value in enumerate(new_individual1):
         if(value) in bit_map1:
@@ -40,9 +41,10 @@ def crossover(individual1, individual2):
 
     bit_map2 = {}
 
-    for i in range(random_index1,random_index2+1):
-        bit_map2[clone_new_individua1[i]]= clone_new_individua2[i]
-        bit_map2[clone_new_individua2[i]]= clone_new_individua1[i]
+    for i in range(random_index1,random_index2 + 1):
+        if clone_new_individua1[i] not in bit_map2:
+            bit_map2[clone_new_individua1[i]]= clone_new_individua2[i]
+            bit_map2[clone_new_individua2[i]]= clone_new_individua1[i]
 
     for index,value in enumerate(new_individual2):
         if(value) in bit_map2:
@@ -66,8 +68,8 @@ def crossover(individual1, individual2):
 
 
 
-individual1 = [[1,2,3],[4,5],[6]]
-individual2 = [[1],[4],[5,6],[3,2]]
+individual1 = [[1,2,3],[4,5]]
+individual2 = [[1],[4],[5],[3,2]]
 
 result = crossover(individual1,individual2)
 for individual in result:

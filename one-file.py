@@ -289,35 +289,60 @@ def mutation(individual,capacity,suppliers,current_capacity):
     return [False, individual]
 
 def crossover(individual1, individual2):
-    index1 = getRamdomIndex(individual1)
-    index2 = getRamdomIndex(individual2)
 
-    bit1 = individual1[index1[0]][index1[1]]
-    bit2 = individual2[index2[0]][index2[1]]
-
-    newIndividual1 = copy.deepcopy(individual1)
-    newIndividual2 = copy.deepcopy(individual2)
+    clone_individual1 = copy.deepcopy(individual1)
+    clone_individual2 = copy.deepcopy(individual2)
     
-    for i1 in range(0, len(individual1)):
-        for i2 in range(0, len(individual1[i1])):
-            if (individual1[i1][i2] == bit1):
-                newIndividual1[i1][i2] = bit2
-            elif (individual1[i1][i2] == bit2):
-                newIndividual1[i1][i2] = bit1
+    new_individual1 = []
+    new_individual2 = []
 
-    for i1 in range(0, len(individual2)):
-        for i2 in range(0, len(individual2[i1])):
-            if (individual2[i1][i2] == bit1):
-                newIndividual2[i1][i2] = bit2
-            elif (individual2[i1][i2] == bit2):
-                newIndividual2[i1][i2] = bit1
+    for gen in individual1:
+        for bit in gen:
+            new_individual1.append(bit)
 
-    if(newIndividual1 == individual1):
-        newIndividual1 = []
-    if(newIndividual2 == individual2):
-        newIndividual2 = []
+    for gen in individual2:
+        for bit in gen:
+            new_individual2.append(bit)
 
-    return [newIndividual1,newIndividual2]
+    clone_new_individua1 = copy.deepcopy(new_individual1)
+    clone_new_individua2 = copy.deepcopy(new_individual2)
+
+    len_individual = len(new_individual1)
+    bit_map1 = {}
+
+    for i in range(0,int(len_individual/2)):
+        bit_map1[clone_new_individua1[i]]= clone_new_individua2[i]
+        bit_map1[clone_new_individua2[i]]= clone_new_individua1[i]
+
+    for index,value in enumerate(new_individual1):
+        if(value) in bit_map1:
+            new_individual1[index] = bit_map1[value]
+
+
+    bit_map2 = {}
+
+    for i in range(0,int(len_individual/2)):
+        bit_map2[clone_new_individua1[i]]= clone_new_individua2[i]
+        bit_map2[clone_new_individua2[i]]= clone_new_individua1[i]
+
+    for index,value in enumerate(new_individual2):
+        if(value) in bit_map2:
+            new_individual2[index] = bit_map2[value]
+
+    count = 0
+    for index1,gen in enumerate(clone_individual1):
+        for index2, bit in enumerate(gen):
+            clone_individual1[index1][index2] = new_individual1[count]
+            count +=1
+
+    count = 0
+    for index1,gen in enumerate(clone_individual2):
+        for index2, bit in enumerate(gen):
+            clone_individual2[index1][index2] = new_individual2[count]
+            count +=1
+
+
+    return [clone_individual1, clone_individual2]
 
 
 ############## SUBMAIN ###################
@@ -461,7 +486,7 @@ ga = GA(
     n_fix = 100,
     n_selection = 0.5,
     n_GA = 20,
-    n_cross = 1,
+    n_cross = 2,
     n_muation = 0.25,
     n_enhance = 0.5,
     output = "output.txt",

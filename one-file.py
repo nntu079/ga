@@ -317,7 +317,7 @@ def crossover(individual1, individual2):
     bit_map1 = {}
 
     for i in range(random_index1,random_index2 + 1):
-        if clone_new_individua1[i] not in bit_map1:
+        if clone_new_individua1[i] not in bit_map1 and clone_new_individua2[i] not in bit_map1:
             bit_map1[clone_new_individua1[i]]= clone_new_individua2[i]
             bit_map1[clone_new_individua2[i]]= clone_new_individua1[i]
 
@@ -329,7 +329,7 @@ def crossover(individual1, individual2):
     bit_map2 = {}
 
     for i in range(random_index1,random_index2 + 1):
-        if clone_new_individua1[i] not in bit_map2:
+        if clone_new_individua1[i] not in bit_map2 and clone_new_individua2[i] not in bit_map2:
             bit_map2[clone_new_individua1[i]]= clone_new_individua2[i]
             bit_map2[clone_new_individua2[i]]= clone_new_individua1[i]
 

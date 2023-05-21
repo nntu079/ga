@@ -332,7 +332,13 @@ def crossover_helper(individual1, individual2,random_index1,random_index2):
 
 def crossover(individual1, individual2):
 
-    len_individual = len(individual1)
+    len_individual = 0
+    
+    for gen in individual1:
+        for bit in gen:
+            len_individual += 1
+
+            
     random_index1 = random.randint(0,len_individual-1)
     random_index2 = random.randint(random_index1,len_individual-1)
 

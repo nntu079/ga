@@ -481,18 +481,18 @@ F0 = makeF0(
     suppliers = suppliers,
     capacity = capacity,
     current_capacity = current_capacity,
-    n_max=100
+    n_max=20
 )
 
 ga = GA(
     population = F0,
     capacity = capacity,
     suppliers = suppliers,
-    n_fix = 100,
+    n_fix = 20,
     n_selection = 0.5,
-    n_GA = 20,
+    n_GA = 50,
     n_cross = 2,
-    n_muation = 0.25,
+    n_muation = 0.05,
     n_enhance = 0.5,
     output = "output.txt",
     current_capacity = current_capacity

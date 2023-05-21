@@ -68,8 +68,8 @@ def crossover(individual1, individual2):
 
 
 
-individual1 = [[1,2,3],[4,5]]
-individual2 = [[1],[4],[5],[3,2]]
+individual1 = [[1,2,3],[4,5],[6]]
+individual2 = [[1],[4,6],[5],[3,2]]
 
 result = crossover(individual1,individual2)
 for individual in result:

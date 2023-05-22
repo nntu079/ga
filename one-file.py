@@ -445,8 +445,6 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
         f = open(output, "w")
 
     for _ in range(n_GA):
-      
-        print(f"Progress {(_+1)/n_GA *100: .2f}%")
         
         Fi = copy.deepcopy(Fi)
         #tăng dân số
@@ -477,6 +475,7 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
                 print(str(_))
 
         count = count +1
+        print(f"Progress {(_+1)/n_GA *100: .2f}%")
  
     return Fi
 

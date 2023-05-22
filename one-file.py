@@ -150,6 +150,7 @@ def makeF0(suppliers, capacity,current_capacity, n_max):    #CHƯA GIẢNG
         if(suppliers[sup] <= current_capacity):
             set_current_capacity.append(sup)
     
+    count = 0
     for sup1 in set_current_capacity:
        
        
@@ -159,12 +160,16 @@ def makeF0(suppliers, capacity,current_capacity, n_max):    #CHƯA GIẢNG
                 temp.append(sup)
      
         temp2 = itertools.permutations(temp)
+
       
         for half_individual in temp2:
             individual = [[sup1]]
             for gen in half_individual:
                 individual.append([gen])
             F0.append(individual)
+            count +=1
+            if(count>n_max):
+                return F0[:n_max]
             
     return F0[:n_max]
 
@@ -398,15 +403,21 @@ def enhance_population(population,capacity,suppliers, n_enhance,current_capacity
 
     for _ in range(0,n_enhance):
         [new_individual,index] = getRandomIndividual(population,True)
+
+        #print(index)
         
         for index,gen in  enumerate(new_individual):
             if (len(gen)==0):
+    
                 del new_individual[index]
+                
 
         [can_enhance,new_individual] = enhance(new_individual,capacity,suppliers,current_capacity)
         
         if(can_enhance and len(new_individual) !=0):
-            population.pop(index)
+            #print(index)
+            #print(len(population))
+            #population.pop(index)
         
 
             population.append(new_individual)
@@ -434,6 +445,8 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
         f = open(output, "w")
 
     for _ in range(n_GA):
+      
+        print(f"Progress {(_+1)/n_GA *100: .2f}%")
         
         Fi = copy.deepcopy(Fi)
         #tăng dân số
@@ -464,7 +477,7 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
                 print(str(_))
 
         count = count +1
-        
+ 
     return Fi
 
 ######### MAIN ############
@@ -484,7 +497,7 @@ ga = GA(
     suppliers = suppliers,
     n_fix = 20,
     n_selection = 0.5,
-    n_GA = 50,
+    n_GA = 30,
     n_cross = 2,
     n_muation = 0.05,
     n_enhance = 0.5,

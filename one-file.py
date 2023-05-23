@@ -351,13 +351,13 @@ def crossover(individual1, individual2):
             crossover_helper(individual2,individual1,random_index1,random_index2)]
 ############## SUBMAIN ###################
 
-def crossover_population(population, capacity, suppliers, n_cross, current_capacity = 0):
+def crossover_population(population, capacity, suppliers, n_cross, current_capacity = 0,percent_cross=0.6):
 
     if current_capacity == 0:
         current_capacity = capacity
 
     count = 0
-    n_cross =int(n_cross * len(population)/2)
+    n_cross =int(n_cross * len(population)/2*percent_cross)
 
     for _ in range(0, n_cross):
         [individual1, individual2] = getRandomTwoIndividual(population)
@@ -432,7 +432,7 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0):
+def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0, percent_cross = 1):
 
     n_muation = int(n_muation * len(population))
     n_enhance = int(n_enhance * len(population))
@@ -452,7 +452,7 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
         if(len(Fi) <= n_fix):
             Fi= increase_population(Fi,suppliers,capacity,current_capacity,n_fix)
 
-        Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
+        Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity,percent_cross)[1]
 
         if(len(Fi) >=n_fix):
             Fi= Fi[:n_fix]
@@ -502,7 +502,8 @@ ga = GA(
     n_muation = 0.05,
     n_enhance = 0.5,
     output = "output.txt",
-    current_capacity = current_capacity
+    current_capacity = current_capacity,
+    percent_cross=0.6
 )
 
 write_output(ga,"./output/output.csv")

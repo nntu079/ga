@@ -356,17 +356,18 @@ def mutation_helper(individual,capacity,suppliers,current_capacity):
     print('Thất bại',fix_individual[1])
     return [False, individual]
 
-individual=[['a','b'],['c','d'],['e']]
-capacity = 50
+individual=[['1','2'],['3','4'],['5'],['6']]
+capacity = 30
 suppliers = {
-    'a':10,
-    'b':15,
-    'c':20,
-    'd':15,
-    'e':20
+    '1':10,
+    '2':15,
+    '3':20,
+    '4':15,
+    '5':20,
+    '6':10
 }
 current_capacity = capacity
-n_mutation = 10
+n_mutation = 5
 
 def mutation(individual,capacity,suppliers,current_capacity, n_bit_mutation):
     individual = copy.deepcopy(individual) 

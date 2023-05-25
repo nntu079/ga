@@ -293,7 +293,7 @@ def mutation_helper(individual,capacity,suppliers,current_capacity):
 
     return [False, individual]
 
-def mutation(individual,capacity,suppliers,current_capacity, n_bit_mutation=10):
+def mutation(individual,capacity,suppliers,current_capacity, n_bit_mutation=5):
     individual = copy.deepcopy(individual) 
 
     result = False

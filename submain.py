@@ -94,7 +94,7 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
 
         #print(Fi)
 
-        Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
+        #Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
 
         if(len(Fi) >=n_fix):
             Fi= Fi[:n_fix]

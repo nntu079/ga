@@ -496,11 +496,11 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     n_fix = 20,
-    n_selection = 0.5,
-    n_GA = 30,
-    n_cross = 2,
+    n_selection = 0.7,
+    n_GA = 50,
+    n_cross = 0,
     n_muation = 0.05,
-    n_enhance = 0.5,
+    n_enhance = 1,
     output = "output.txt",
     current_capacity = current_capacity
 )

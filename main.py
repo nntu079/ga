@@ -16,9 +16,9 @@ ga = submain.GA(
     n_fix = 50,
     n_selection = 0.25,
     n_GA = 100,
-    n_cross = 3,
+    n_cross = 1,
     n_muation = 0.25,
-    n_enhance = 0.5,
+    n_enhance = 1,
     output = "output.txt",
     current_capacity = current_capacity
 )

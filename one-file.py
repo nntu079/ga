@@ -273,9 +273,6 @@ def mutation_helper(individual,capacity,suppliers,current_capacity):
     random1 = getRamdomIndex(individual)
     random2 = getRamdomIndex(individual)
 
-    while random1 == random2:
-        random2 = getRamdomIndex(individual)
-        
     temp = individual[random1[0]][random1[1]]
     individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
     individual[random2[0]][random2[1]] = temp

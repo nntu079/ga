@@ -264,7 +264,7 @@ def increase_population(Fi,suppliers,capacity,current_capacity, n_max):
 
 ########### functions ########
 
-def mutation(individual,capacity,suppliers,current_capacity):
+def mutation_helper(individual,capacity,suppliers,current_capacity):
     #return new individual (deep copy)
     individual = copy.deepcopy(individual) 
 
@@ -292,6 +292,18 @@ def mutation(individual,capacity,suppliers,current_capacity):
         individual[random2[0]][random2[1]] = temp
 
     return [False, individual]
+
+
+def mutation(individual,capacity,suppliers,current_capacity, n_mutation):
+    individual = copy.deepcopy(individual) 
+
+    result = False
+    for i in range(0,n_mutation):
+        new_invidual = mutation_helper(individual,capacity,suppliers,current_capacity)
+        if(new_invidual[0] == True):
+            result = True
+        individual = copy.deepcopy(new_invidual[1])
+    return [result,individual]
 
 def crossover_helper(individual1, individual2,random_index1,random_index2):
     

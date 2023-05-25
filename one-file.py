@@ -293,12 +293,11 @@ def mutation_helper(individual,capacity,suppliers,current_capacity):
 
     return [False, individual]
 
-
-def mutation(individual,capacity,suppliers,current_capacity, n_mutation):
+def mutation(individual,capacity,suppliers,current_capacity, n_bit_mutation=10):
     individual = copy.deepcopy(individual) 
 
     result = False
-    for i in range(0,n_mutation):
+    for i in range(0,n_bit_mutation):
         new_invidual = mutation_helper(individual,capacity,suppliers,current_capacity)
         if(new_invidual[0] == True):
             result = True
@@ -345,7 +344,6 @@ def crossover_helper(individual1, individual2,random_index1,random_index2):
             count +=1
     
     return clone_individual1
-
 
 def crossover(individual1, individual2):
 
@@ -399,12 +397,12 @@ def crossover_population(population, capacity, suppliers, n_cross, current_capac
                 del individual[index]
     return [count,population]
 
-def mutation_population(population, capacity, suppliers, n_muation,current_capacity):
+def mutation_population(population, capacity, suppliers, n_muation,current_capacity,n_bit_mutation):
 
     count = 0
     for _ in range(0, n_muation):
         individual = getRandomIndividual(population)
-        result = mutation(individual, capacity, suppliers,current_capacity)
+        result = mutation(individual, capacity, suppliers,current_capacity,n_bit_mutation)
         if (result[0]):
             population.append(individual)
             count = count+1
@@ -444,7 +442,7 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0, percent_cross = 1):
+def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0, percent_cross = 1,n_bit_mutation = 6):
 
     n_muation = int(n_muation * len(population))
     n_enhance = int(n_enhance * len(population))
@@ -469,7 +467,7 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
         if(len(Fi) >=n_fix):
             Fi= Fi[:n_fix]
         
-        Fi = mutation_population(Fi,capacity,suppliers,n_muation,current_capacity)[1]
+        Fi = mutation_population(Fi,capacity,suppliers,n_muation,current_capacity,n_bit_mutation)[1]
        
         if(len(Fi) >=n_fix):
             Fi= Fi[:n_fix]
@@ -515,7 +513,8 @@ ga = GA(
     n_enhance = 0.5,
     output = "output.txt",
     current_capacity = current_capacity,
-    percent_cross=0.6
+    percent_cross=0.6,
+    n_bit_mutation = 3
 )
 
 write_output(ga,"./output/output.csv")

@@ -368,11 +368,11 @@ suppliers = {
 current_capacity = capacity
 n_mutation = 10
 
-def mutation(individual,capacity,suppliers,current_capacity, n_mutation):
+def mutation(individual,capacity,suppliers,current_capacity, n_bit_mutation):
     individual = copy.deepcopy(individual) 
 
     result = False
-    for i in range(0,n_mutation):
+    for i in range(0,n_bit_mutation):
         print('Mutation: ',i+1)
         new_invidual = mutation_helper(individual,capacity,suppliers,current_capacity)
         if(new_invidual[0] == True):

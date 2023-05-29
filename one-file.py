@@ -364,7 +364,6 @@ def crossover_population(population, capacity, suppliers, n_cross, current_capac
         current_capacity = capacity
 
     count = 0
-    n_cross =int(n_cross * len(population)/2*percent_cross)
 
     for _ in range(0, n_cross):
         [individual1, individual2] = getRandomTwoIndividual(population)
@@ -452,25 +451,34 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhanc
         f = open(output, "w")
 
     for _ in range(n_GA):
-      
-        
+        N0 = len(Fi)
+        Fi = selection_population(Fi,n_selection)     #lấy 25% của đời trước
+          
         Fi = copy.deepcopy(Fi)
         #tăng dân số
-        if(len(Fi) <= n_fix):
-            Fi= increase_population(Fi,suppliers,capacity,current_capacity,n_fix)
+        #if(len(Fi) <= n_fix):
+        #    Fi= increase_population(Fi,suppliers,capacity,current_capacity,n_fix)
+        #0.25 (n_selection)  -> (0.85) n_selct
 
-        Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity,percent_cross)[1]
+        #0.2
+        #n_cross =1 =>0.25+2 
+        #        =2  => 0.25 +2x2 
+        #       = x => 0.25n0 + 2x  = 0.85no 
+        #       => x => n_selection*n0 + 2x = (n_cross + n_selection)n0
+        #        => x = n_cross*n0/2
+        num_cross = int(n_cross*N0/2)  
+        Fi = crossover_population(Fi, capacity, suppliers, num_cross,current_capacity,percent_cross)[1]
 
-        if(len(Fi) >=n_fix):
-            Fi= Fi[:n_fix]
-        
+        #if(len(Fi) >=n_fix):
+        #    Fi= Fi[:n_fix]
+    
         Fi = mutation_population(Fi,capacity,suppliers,n_mutation,current_capacity,n_bit_mutation)[1]
-       
+
         if(len(Fi) >=n_fix):
             Fi= Fi[:n_fix]
        
         Fi = enhance_population(Fi,capacity,suppliers,n_enhance,current_capacity)[1]
-        Fi = selection_population(Fi,n_selection)
+
 
     
         if(output != ""):
@@ -503,15 +511,15 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     n_fix = 100,
-    n_selection = 0.2,
-    n_GA = 20,
-    n_cross = 1,
-    n_mutation = 0.05,
+    n_selection = 0.25,
+    n_GA = 500,
+    n_cross = 0.6, #60% cua population
+    n_mutation = 0.15,
     n_enhance = 1,
     output = "output.txt",
     current_capacity = current_capacity,
     percent_cross=0.6,
-    n_bit_mutation = 5
+    n_bit_mutation = 20
 )
 
 write_output(ga,"./output/output.csv")

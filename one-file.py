@@ -451,7 +451,9 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhanc
         f = open(output, "w")
 
     for _ in range(n_GA):
-        N0 = len(Fi)
+       
+        Fi_1 = copy.deepcopy(Fi)
+        N0 = len(Fi_1)
         Fi = selection_population(Fi,n_selection)     #lấy 25% của đời trước
           
         Fi = copy.deepcopy(Fi)
@@ -466,19 +468,35 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhanc
         #       = x => 0.25n0 + 2x  = 0.85no 
         #       => x => n_selection*n0 + 2x = (n_cross + n_selection)n0
         #        => x = n_cross*n0/2
+
         num_cross = int(n_cross*N0/2)  
         Fi = crossover_population(Fi, capacity, suppliers, num_cross,current_capacity,percent_cross)[1]
 
-        #if(len(Fi) >=n_fix):
-        #    Fi= Fi[:n_fix]
-    
-        Fi = mutation_population(Fi,capacity,suppliers,n_mutation,current_capacity,n_bit_mutation)[1]
+        #kiểm tra đủ 85% chưa để thêm từ đời fi-1
+        if(len(Fi)<(n_cross + n_selection)*N0):
+            for individual in Fi_1:
+                if individual not in Fi:
+                    Fi.append(individual)
+                if(len(Fi) >= (n_cross + n_selection) *N0):
+                    break
 
-        if(len(Fi) >=n_fix):
-            Fi= Fi[:n_fix]
+        # n_selection*n0 + n_cross*n0 + num_mutation = n0
+        # 0.25N0 + 0.6N0 + num_mutation = N0
+        # num_mutation = N0 - (n_selection*n0 + n_cross*n0 ) = N0(1 - n_selection -n_cross )
+
+        num_mutation = int(N0*(1 - n_selection -n_cross ))
+        Fi = mutation_population(Fi,capacity,suppliers,num_mutation,current_capacity,n_bit_mutation)[1]
+
+        #kiểm tra sau khi mutation đủ 100% chưa để thêm từ đời fi-1
+        if(len(Fi)<N0):
+            for individual in Fi_1:
+                if individual not in Fi:
+                    Fi.append(individual)
+                if(len(Fi) >= N0):
+                    break
        
         Fi = enhance_population(Fi,capacity,suppliers,n_enhance,current_capacity)[1]
-
+        Fi = Fi[:N0]
 
     
         if(output != ""):
@@ -511,10 +529,10 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     n_fix = 100,
-    n_selection = 0.25,
+    n_selection = 0.25, #25%
     n_GA = 500,
     n_cross = 0.6, #60% cua population
-    n_mutation = 0.15,
+    n_mutation = 0.15, #15%
     n_enhance = 1,
     output = "output.txt",
     current_capacity = current_capacity,

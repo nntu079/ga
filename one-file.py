@@ -445,8 +445,8 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
         f = open(output, "w")
 
     for _ in range(n_GA):
-       
-        Fi_1 = copy.deepcopy(Fi)
+        #fi-1
+        Fi_1 = copy.deepcopy(Fi) 
         N0 = len(Fi_1)
         Fi = selection_population(Fi,n_selection)     #lấy 25% của đời trước
           

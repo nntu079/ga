@@ -404,29 +404,25 @@ def mutation_population(population, capacity, suppliers, n_mutation,current_capa
             count = count+1
     return [count, population]
 
-def enhance_population(population,capacity,suppliers, n_enhance,current_capacity):
+def enhance_population(population,capacity,suppliers,current_capacity):
     count = 0
+    n_enhance = len(population)
 
     for _ in range(0,n_enhance):
-        [new_individual,index] = getRandomIndividual(population,True)
-
-        #print(index)
+        [new_individual,index_individual] = getRandomIndividual(population,True)
         
         for index,gen in  enumerate(new_individual):
             if (len(gen)==0):
-    
                 del new_individual[index]
-                
-
+       
         [can_enhance,new_individual] = enhance(new_individual,capacity,suppliers,current_capacity)
         
         if(can_enhance and len(new_individual) !=0):
-            #print(index)
-            #print(len(population))
-            #population.pop(index)
-        
-
+            
+            population.pop(index_individual)
             population.append(new_individual)
+
+            
             count = count + 1
     
     return [count,population]
@@ -438,10 +434,8 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhance,n_selection, output ="", current_capacity = 0,n_bit_mutation = 6):
+def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", current_capacity = 0,n_bit_mutation = 6):
 
-    n_mutation = int(n_mutation * len(population))
-    n_enhance = int(n_enhance * len(population))
     n_selection = int(n_selection * len(population))
 
     Fi = population
@@ -494,8 +488,8 @@ def GA(population, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhance,n_se
                     Fi.append(individual)
                 if(len(Fi) >= N0):
                     break
-       
-        Fi = enhance_population(Fi,capacity,suppliers,n_enhance,current_capacity)[1]
+                
+        Fi = enhance_population(Fi,capacity,suppliers,current_capacity)[1]
         Fi = Fi[:N0]
 
     
@@ -531,8 +525,7 @@ ga = GA(
     n_selection = 0.25, #25%
     n_GA = 500,
     n_cross = 0.6, #60% 
-    n_mutation = 0.15, #15%
-    n_enhance = 1,
+    #n_mutation = 0.15, #15%
     output = "output.txt",
     current_capacity = current_capacity,
     n_bit_mutation = 20

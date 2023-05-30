@@ -358,7 +358,7 @@ def crossover(individual1, individual2):
             crossover_helper(individual2,individual1,random_index1,random_index2)]
 ############## SUBMAIN ###################
 
-def crossover_population(population, capacity, suppliers, n_cross, current_capacity = 0,percent_cross=0.6):
+def crossover_population(population, capacity, suppliers, n_cross, current_capacity = 0):
 
     if current_capacity == 0:
         current_capacity = capacity
@@ -438,7 +438,7 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhance,n_selection, output ="", current_capacity = 0, percent_cross = 1,n_bit_mutation = 6):
+def GA(population, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhance,n_selection, output ="", current_capacity = 0,n_bit_mutation = 6):
 
     n_mutation = int(n_mutation * len(population))
     n_enhance = int(n_enhance * len(population))
@@ -470,7 +470,7 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_mutation, n_enhanc
         #        => x = n_cross*n0/2
 
         num_cross = int(n_cross*N0/2)  
-        Fi = crossover_population(Fi, capacity, suppliers, num_cross,current_capacity,percent_cross)[1]
+        Fi = crossover_population(Fi, capacity, suppliers, num_cross,current_capacity)[1]
 
         #kiểm tra đủ 85% chưa để thêm từ đời fi-1
         if(len(Fi)<(n_cross + n_selection)*N0):
@@ -528,15 +528,13 @@ ga = GA(
     population = F0,
     capacity = capacity,
     suppliers = suppliers,
-    n_fix = 100,
     n_selection = 0.25, #25%
     n_GA = 500,
-    n_cross = 0.6, #60% cua population
+    n_cross = 0.6, #60% 
     n_mutation = 0.15, #15%
     n_enhance = 1,
     output = "output.txt",
     current_capacity = current_capacity,
-    percent_cross=0.6,
     n_bit_mutation = 20
 )
 

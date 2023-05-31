@@ -434,7 +434,7 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", current_capacity = 0,n_bit_mutation = 6):
+def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", current_capacity = 0,n_bit_mutation = 6, n_max_cross = 100, n_max_mutation=100):
 
     n_selection = int(n_selection * len(population))
 
@@ -451,20 +451,13 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
         Fi = selection_population(Fi,n_selection)     #lấy 25% của đời trước
           
         Fi = copy.deepcopy(Fi)
-        #tăng dân số
-        #if(len(Fi) <= n_fix):
-        #    Fi= increase_population(Fi,suppliers,capacity,current_capacity,n_fix)
-        #0.25 (n_selection)  -> (0.85) n_selct
 
-        #0.2
-        #n_cross =1 =>0.25+2 
-        #        =2  => 0.25 +2x2 
-        #       = x => 0.25n0 + 2x  = 0.85no 
-        #       => x => n_selection*n0 + 2x = (n_cross + n_selection)n0
-        #        => x = n_cross*n0/2
-
-        num_cross = int(n_cross*N0/2)  
-        Fi = crossover_population(Fi, capacity, suppliers, num_cross,current_capacity)[1]
+        #lặp tối đa 1000 lần
+        for i in range(0,n_max_cross):
+            Fi = crossover_population(Fi, capacity, suppliers, 1,current_capacity)[1]
+            #nếu thỏa thì dừng
+            if(len(Fi)>=(n_cross + n_selection)*N0):
+                break
 
         #kiểm tra đủ 85% chưa để thêm từ đời fi-1
         if(len(Fi)<(n_cross + n_selection)*N0):
@@ -474,12 +467,12 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
                 if(len(Fi) >= (n_cross + n_selection) *N0):
                     break
 
-        # n_selection*n0 + n_cross*n0 + num_mutation = n0
-        # 0.25N0 + 0.6N0 + num_mutation = N0
-        # num_mutation = N0 - (n_selection*n0 + n_cross*n0 ) = N0(1 - n_selection -n_cross )
-
-        num_mutation = int(N0*(1 - n_selection -n_cross ))
-        Fi = mutation_population(Fi,capacity,suppliers,num_mutation,current_capacity,n_bit_mutation)[1]
+        #lặp tối đa 1000 lần
+        for i in range(0,n_max_mutation):
+            Fi = mutation_population(Fi,capacity,suppliers,1,current_capacity,n_bit_mutation)[1]
+            #nếu thỏa thì dừng
+            if(len(Fi)>=N0):
+                break   
 
         #kiểm tra sau khi mutation đủ 100% chưa để thêm từ đời fi-1
         if(len(Fi)<N0):
@@ -528,7 +521,9 @@ ga = GA(
     #n_mutation = 0.15, #15%
     output = "output.txt",
     current_capacity = current_capacity,
-    n_bit_mutation = 20
+    n_bit_mutation = 20,
+    n_max_cross=100,
+    n_max_mutation=50
 )
 
 write_output(ga,"./output/output.csv")

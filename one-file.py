@@ -264,7 +264,7 @@ def increase_population(Fi,suppliers,capacity,current_capacity, n_max):
 
 ########### functions ########
 
-def mutation(individual,capacity,suppliers,current_capacity):
+def mutation_helper(individual,capacity,suppliers,current_capacity):
     #return new individual (deep copy)
     individual = copy.deepcopy(individual) 
 
@@ -273,9 +273,6 @@ def mutation(individual,capacity,suppliers,current_capacity):
     random1 = getRamdomIndex(individual)
     random2 = getRamdomIndex(individual)
 
-    while random1 == random2:
-        random2 = getRamdomIndex(individual)
-        
     temp = individual[random1[0]][random1[1]]
     individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
     individual[random2[0]][random2[1]] = temp
@@ -292,6 +289,17 @@ def mutation(individual,capacity,suppliers,current_capacity):
         individual[random2[0]][random2[1]] = temp
 
     return [False, individual]
+
+def mutation(individual,capacity,suppliers,current_capacity, n_bit_mutation=5):
+    individual = copy.deepcopy(individual) 
+
+    result = False
+    for i in range(0,n_bit_mutation):
+        new_individual = mutation_helper(individual,capacity,suppliers,current_capacity)
+        if(new_individual[0] == True):
+            result = True
+        individual = copy.deepcopy(new_individual[1])
+    return [result,individual]
 
 def crossover_helper(individual1, individual2,random_index1,random_index2):
     
@@ -334,7 +342,6 @@ def crossover_helper(individual1, individual2,random_index1,random_index2):
     
     return clone_individual1
 
-
 def crossover(individual1, individual2):
 
     len_individual = 0
@@ -357,7 +364,6 @@ def crossover_population(population, capacity, suppliers, n_cross, current_capac
         current_capacity = capacity
 
     count = 0
-    n_cross =int(n_cross * len(population)/2)
 
     for _ in range(0, n_cross):
         [individual1, individual2] = getRandomTwoIndividual(population)
@@ -387,40 +393,36 @@ def crossover_population(population, capacity, suppliers, n_cross, current_capac
                 del individual[index]
     return [count,population]
 
-def mutation_population(population, capacity, suppliers, n_muation,current_capacity):
+def mutation_population(population, capacity, suppliers, n_mutation,current_capacity,n_bit_mutation):
 
     count = 0
-    for _ in range(0, n_muation):
+    for _ in range(0, n_mutation):
         individual = getRandomIndividual(population)
-        result = mutation(individual, capacity, suppliers,current_capacity)
+        result = mutation(individual, capacity, suppliers,current_capacity,n_bit_mutation)
         if (result[0]):
             population.append(individual)
             count = count+1
     return [count, population]
 
-def enhance_population(population,capacity,suppliers, n_enhance,current_capacity):
+def enhance_population(population,capacity,suppliers,current_capacity):
     count = 0
+    n_enhance = len(population)
 
     for _ in range(0,n_enhance):
-        [new_individual,index] = getRandomIndividual(population,True)
-
-        #print(index)
+        [new_individual,index_individual] = getRandomIndividual(population,True)
         
         for index,gen in  enumerate(new_individual):
             if (len(gen)==0):
-    
                 del new_individual[index]
-                
-
+       
         [can_enhance,new_individual] = enhance(new_individual,capacity,suppliers,current_capacity)
         
         if(can_enhance and len(new_individual) !=0):
-            #print(index)
-            #print(len(population))
-            #population.pop(index)
-        
-
+            
+            population.pop(index_individual)
             population.append(new_individual)
+
+            
             count = count + 1
     
     return [count,population]
@@ -432,10 +434,8 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance,n_selection, output ="", current_capacity = 0):
+def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", current_capacity = 0,n_bit_mutation = 6, n_max_cross = 100, n_max_mutation=100):
 
-    n_muation = int(n_muation * len(population))
-    n_enhance = int(n_enhance * len(population))
     n_selection = int(n_selection * len(population))
 
     Fi = population
@@ -445,25 +445,45 @@ def GA(population,n_fix, capacity,suppliers, n_GA, n_cross, n_muation, n_enhance
         f = open(output, "w")
 
     for _ in range(n_GA):
-      
-        
+        #fi-1
+        Fi_1 = copy.deepcopy(Fi) 
+        N0 = len(Fi_1)
+        Fi = selection_population(Fi,n_selection)     #lấy 25% của đời trước
+          
         Fi = copy.deepcopy(Fi)
-        #tăng dân số
-        if(len(Fi) <= n_fix):
-            Fi= increase_population(Fi,suppliers,capacity,current_capacity,n_fix)
 
-        Fi = crossover_population(Fi, capacity, suppliers, n_cross,current_capacity)[1]
+        #lặp tối đa 1000 lần
+        for i in range(0,n_max_cross):
+            Fi = crossover_population(Fi, capacity, suppliers, 1,current_capacity)[1]
+            #nếu thỏa thì dừng
+            if(len(Fi)>=(n_cross + n_selection)*N0):
+                break
 
-        if(len(Fi) >=n_fix):
-            Fi= Fi[:n_fix]
-        
-        Fi = mutation_population(Fi,capacity,suppliers,n_muation,current_capacity)[1]
-       
-        if(len(Fi) >=n_fix):
-            Fi= Fi[:n_fix]
-       
-        Fi = enhance_population(Fi,capacity,suppliers,n_enhance,current_capacity)[1]
-        Fi = selection_population(Fi,n_selection)
+        #kiểm tra đủ 85% chưa để thêm từ đời fi-1
+        if(len(Fi)<(n_cross + n_selection)*N0):
+            for individual in Fi_1:
+                if individual not in Fi:
+                    Fi.append(individual)
+                if(len(Fi) >= (n_cross + n_selection) *N0):
+                    break
+
+        #lặp tối đa 1000 lần
+        for i in range(0,n_max_mutation):
+            Fi = mutation_population(Fi,capacity,suppliers,1,current_capacity,n_bit_mutation)[1]
+            #nếu thỏa thì dừng
+            if(len(Fi)>=N0):
+                break   
+
+        #kiểm tra sau khi mutation đủ 100% chưa để thêm từ đời fi-1
+        if(len(Fi)<N0):
+            for individual in Fi_1:
+                if individual not in Fi:
+                    Fi.append(individual)
+                if(len(Fi) >= N0):
+                    break
+                
+        Fi = enhance_population(Fi,capacity,suppliers,current_capacity)[1]
+        Fi = Fi[:N0]
 
     
         if(output != ""):
@@ -488,21 +508,22 @@ F0 = makeF0(
     suppliers = suppliers,
     capacity = capacity,
     current_capacity = current_capacity,
-    n_max=20
+    n_max=100
 )
 
 ga = GA(
     population = F0,
     capacity = capacity,
     suppliers = suppliers,
-    n_fix = 20,
-    n_selection = 0.7,
-    n_GA = 50,
-    n_cross = 0,
-    n_muation = 0.05,
-    n_enhance = 1,
+    n_selection = 0.25, #25%
+    n_GA = 500,
+    n_cross = 0.6, #60% 
+    #n_mutation = 0.15, #15%
     output = "output.txt",
-    current_capacity = current_capacity
+    current_capacity = current_capacity,
+    n_bit_mutation = 20,
+    n_max_cross=100,
+    n_max_mutation=50
 )
 
 write_output(ga,"./output/output.csv")

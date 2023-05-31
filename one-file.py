@@ -523,8 +523,8 @@ ga = GA(
     output = "output.txt",
     current_capacity = current_capacity,
     n_bit_mutation = 20,
-    n_max_cross=100,
-    n_max_mutation=50
+    n_max_cross=10,
+    n_max_mutation=10
 )
 
 write_output(ga,"./output/output.csv")

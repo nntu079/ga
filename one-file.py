@@ -462,7 +462,7 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
         #kiểm tra đủ 85% chưa để thêm từ đời fi-1
         if(len(Fi)<(n_cross + n_selection)*N0):
             for individual in Fi_1:
-                if individual not in Fi:
+                if individual not in Fi: #not in khử trùng
                     Fi.append(individual)
                 if(len(Fi) >= (n_cross + n_selection) *N0):
                     break
@@ -477,7 +477,7 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
         #kiểm tra sau khi mutation đủ 100% chưa để thêm từ đời fi-1
         if(len(Fi)<N0):
             for individual in Fi_1:
-                if individual not in Fi:
+                if individual not in Fi: #not in khử trùng
                     Fi.append(individual)
                 if(len(Fi) >= N0):
                     break
@@ -495,6 +495,7 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
             for _ in Fi:
                 print(str(_))
 
+        print(len(Fi))
         print(f"Progress {(count)/n_GA *100: .2f}%")
         count = count +1
  

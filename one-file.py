@@ -358,14 +358,14 @@ def crossover(individual1, individual2):
             crossover_helper(individual2,individual1,random_index1,random_index2)]
 ############## SUBMAIN ###################
 
-def crossover_population(population, capacity, suppliers, n_cross, current_capacity = 0):
+def crossover_population(population, capacity, suppliers, n_crossover, current_capacity = 0):
 
     if current_capacity == 0:
         current_capacity = capacity
 
     count = 0
 
-    for _ in range(0, n_cross):
+    for _ in range(0, n_crossover):
         [individual1, individual2] = getRandomTwoIndividual(population)
         [child1, child2] = crossover(individual1, individual2)
 
@@ -434,7 +434,7 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", current_capacity = 0,n_bit_mutation = 6, n_max_cross = 100, n_max_mutation=100):
+def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output ="", current_capacity = 0,n_bit_mutation = 50, n_max_crossover = 30, n_max_mutation=15):
 
     n_selection = int(n_selection * len(population))
 
@@ -452,22 +452,22 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
           
         Fi = copy.deepcopy(Fi)
 
-        #lặp tối đa 1000 lần
-        for i in range(0,n_max_cross):
+        #lặp tối đa n_max_crossover lần
+        for i in range(0,n_max_crossover):
             Fi = crossover_population(Fi, capacity, suppliers, 1,current_capacity)[1]
             #nếu thỏa thì dừng
-            if(len(Fi)>=(n_cross + n_selection)*N0):
+            if(len(Fi)>=(n_crossover + n_selection)*N0):
                 break
 
         #kiểm tra đủ 85% chưa để thêm từ đời fi-1
-        if(len(Fi)<(n_cross + n_selection)*N0):
+        if(len(Fi)<(n_crossover + n_selection)*N0):
             for individual in Fi_1:
                 if individual not in Fi: #not in khử trùng
                     Fi.append(individual)
-                if(len(Fi) >= (n_cross + n_selection) *N0):
+                if(len(Fi) >= (n_crossover + n_selection) *N0):
                     break
 
-        #lặp tối đa 1000 lần
+        #lặp tối đa n_max_mutation lần
         for i in range(0,n_max_mutation):
             Fi = mutation_population(Fi,capacity,suppliers,1,current_capacity,n_bit_mutation)[1]
             #nếu thỏa thì dừng
@@ -509,21 +509,21 @@ F0 = makeF0(
     suppliers = suppliers,
     capacity = capacity,
     current_capacity = current_capacity,
-    n_max=100
+    n_max=20
 )
 
 ga = GA(
     population = F0,
     capacity = capacity,
     suppliers = suppliers,
-    n_selection = 0.25, #25%
-    n_GA = 500,
-    n_cross = 0.6, #60% 
-    #n_mutation = 0.15, #15%
+    n_selection = 0.35, 
+    n_GA = 50,
+    n_crossover = 0.6,  
+    #n_mutation = 0.15, 
     output = "output.txt",
     current_capacity = current_capacity,
-    n_bit_mutation = 20,
-    n_max_cross=10,
+    n_bit_mutation = 50,
+    n_max_crossover=15,
     n_max_mutation=10
 )
 

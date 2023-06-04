@@ -10,3 +10,6 @@ update 11.5.20223
 1. chọn số nhỏ hơn giữa n! và 100 - FREE
 2. tạo hàm tăng population  ~ 1 tiếng
 3. Dựa theo hình model chụp trong máy để viết 1 file code đầy đủ các phần
+
+
+Enhance: 2Cn

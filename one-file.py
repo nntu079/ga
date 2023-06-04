@@ -204,7 +204,7 @@ def enhance(individual,capacity, suppliers,current_capacity):
     if(len(individual)==0):
         return [False, individual]
 
-    idx_gen = getRamdomIndex(individual)[0]
+    idx_gen = getRamdomIndex(individual)[0]        #lay random1, ko lấy random2 (random2=0)
 
     individual[idx_gen-1] = individual[idx_gen] + individual[idx_gen-1]
     individual.pop(idx_gen)
@@ -497,7 +497,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
 
         print(len(Fi))
         print(f"Progress {(count)/n_GA *100: .2f}%")
-        count = count +1
+        count = count + 1
  
     return Fi
 
@@ -509,22 +509,22 @@ F0 = makeF0(
     suppliers = suppliers,
     capacity = capacity,
     current_capacity = current_capacity,
-    n_max=20
+    n_max = 100
 )
 
 ga = GA(
     population = F0,
     capacity = capacity,
     suppliers = suppliers,
-    n_selection = 0.35, 
-    n_GA = 50,
+    n_selection = 0.25, 
+    n_GA = 500,
     n_crossover = 0.6,  
     #n_mutation = 0.15, 
     output = "output.txt",
     current_capacity = current_capacity,
-    n_bit_mutation = 50,
-    n_max_crossover=15,
-    n_max_mutation=10
+    n_bit_mutation = 100,
+    n_max_crossover = 30,
+    n_max_mutation = 15
 )
 
 write_output(ga,"./output/output.csv")

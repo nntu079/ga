@@ -436,6 +436,8 @@ def selection_population(population,n_selection):
 
 def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output ="", current_capacity = 0,n_bit_mutation = 50, n_max_crossover = 30, n_max_mutation=15):
 
+
+
     n_selection = int(n_selection * len(population))
 
     Fi = population
@@ -512,6 +514,9 @@ F0 = makeF0(
     n_max = 100
 )
 
+import time
+start = time.time()
+
 ga = GA(
     population = F0,
     capacity = capacity,
@@ -526,5 +531,8 @@ ga = GA(
     n_max_crossover = 30,
     n_max_mutation = 15
 )
+
+end = time.time()
+print(end - start)
 
 write_output(ga,"./output/output.csv")

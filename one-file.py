@@ -485,7 +485,7 @@ def GA(population, capacity,suppliers, n_GA, n_cross,n_selection, output ="", cu
         Fi = enhance_population(Fi,capacity,suppliers,current_capacity)[1]
         Fi = Fi[:N0]
 
-    
+        Fi = selection_population(Fi,len(population))
         if(output != ""):
             f.write('GENERATION '+str(count)+'\n')
             for _ in Fi:

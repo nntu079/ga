@@ -197,22 +197,39 @@ def getRandomTwoIndividual(populations):
    
     return [copy.deepcopy(populations[random1]), copy.deepcopy(populations[random2])]
 
-def enhance(individual,capacity, suppliers,current_capacity): 
+def enhance_helper(individual,capacity, suppliers,current_capacity,idx_gen1, idx_gen2): 
 
     individual = copy.deepcopy(individual)
 
     if(len(individual)==0):
         return [False, individual]
+   
+    len_gen1 = len(individual[idx_gen1])
+    len_gen2 = len(individual[idx_gen2])
 
-    idx_gen = getRamdomIndex(individual)[0]        #lay random1, ko lấy random2 (random2=0)
-
-    individual[idx_gen-1] = individual[idx_gen] + individual[idx_gen-1]
-    individual.pop(idx_gen)
+    if(len_gen1>=len_gen2):
+        individual[idx_gen1] = individual[idx_gen1] + individual[idx_gen2]
+        individual.pop(idx_gen2)
+    else:
+        individual[idx_gen2] = individual[idx_gen2] + individual[idx_gen1]
+        individual.pop(idx_gen1)
 
     if (evaluate(individual, capacity, suppliers,current_capacity) == -1):  #vị trí -1 là vị trí cuối
         return fix(individual,suppliers,capacity,current_capacity)
     else:
         return [True, individual]
+    
+def enhance(individual, capacity, suppliers, current_capacity):
+    
+    len_individual = len(individual)
+
+    for i in range(0,len_individual-1):
+        for j in range(i+1,len_individual):
+            result = enhance_helper(individual,capacity,suppliers,current_capacity,i,j)
+            if(result[0]):
+                return result
+
+    return [False, individual]
     
 def getScore(individual):         #Đếm số ngày trong plan đó
     return len(individual)
@@ -522,7 +539,7 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     n_selection = 0.25, 
-    n_GA = 500,
+    n_GA = 50,
     n_crossover = 0.6,  
     #n_mutation = 0.15, 
     output = "output.txt",

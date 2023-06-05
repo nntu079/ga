@@ -323,35 +323,6 @@ def crossover(individual1, individual2):
 
 ################### TEST ###################
 
-def mutation_helper(individual,capacity,suppliers,current_capacity):
-    #return new individual (deep copy)
-    individual = copy.deepcopy(individual) 
-
-    #print(individual)
-
-    random1 = getRamdomIndex(individual)
-    random2 = getRamdomIndex(individual)
-
-    print(random1,'-',random2)
-        
-    temp = individual[random1[0]][random1[1]]
-    individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
-    individual[random2[0]][random2[1]] = temp
-
-    fix_individual = [True, individual]
-    if( evaluate(individual,capacity,suppliers,current_capacity) == -1):
-        fix_individual = fix(individual,suppliers,capacity,current_capacity)
-    
-    if(fix_individual[0]):
-        print('Thành công',fix_individual[1])
-        return fix_individual
-    else:
-        temp = individual[random1[0]][random1[1]]
-        individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
-        individual[random2[0]][random2[1]] = temp
-
-    print('Thất bại',fix_individual[1])
-    return [False, individual]
 
 individual=[['1','2'],['3','4'],['5'],['6']]
 capacity = 30
@@ -366,17 +337,40 @@ suppliers = {
 current_capacity = capacity
 n_mutation = 5
 
-def mutation(individual,capacity,suppliers,current_capacity, n_bit_mutation):
-    individual = copy.deepcopy(individual) 
+def enhance_helper(individual,capacity, suppliers,current_capacity,idx_gen1, idx_gen2): 
 
-    result = False
-    for i in range(0,n_bit_mutation):
-        print('Mutation: ',i+1)
-        new_invidual = mutation_helper(individual,capacity,suppliers,current_capacity)
-        if(new_invidual[0] == True):
-            result = True
-        individual = copy.deepcopy(new_invidual[1])
-    print('Kết quả cuối cùng',individual)
-    return [result,individual]
+    print(idx_gen1,idx_gen2)
 
-mutation(individual,capacity,suppliers,current_capacity,n_mutation)
+    individual = copy.deepcopy(individual)
+
+    if(len(individual)==0):
+        return [False, individual]
+   
+    len_gen1 = len(individual[idx_gen1])
+    len_gen2 = len(individual[idx_gen2])
+
+    if(len_gen1>=len_gen2):
+        individual[idx_gen1] = individual[idx_gen1] + individual[idx_gen2]
+        individual.pop(idx_gen2)
+    else:
+        individual[idx_gen2] = individual[idx_gen2] + individual[idx_gen1]
+        individual.pop(idx_gen1)
+
+    if (evaluate(individual, capacity, suppliers,current_capacity) == -1):  #vị trí -1 là vị trí cuối
+        return fix(individual,suppliers,capacity,current_capacity)
+    else:
+        return [True, individual]
+    
+def enhance(individual, capacity, suppliers, current_capacity):
+    
+    len_individual = len(individual)
+
+    for i in range(0,len_individual-1):
+        for j in range(i+1,len_individual):
+            result = enhance_helper(individual,capacity,suppliers,current_capacity,i,j)
+            if(result[0]):
+                return result
+
+    return [False, individual]
+    
+enhance(individual,capacity,suppliers,current_capacity)

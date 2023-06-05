@@ -1,2 +1,4 @@
 output
 output.txt
+__pycache__
+.vscode

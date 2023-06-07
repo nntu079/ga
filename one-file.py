@@ -219,17 +219,22 @@ def enhance_helper(individual,capacity, suppliers,current_capacity,idx_gen1, idx
     else:
         return [True, individual]
     
-def enhance(individual, capacity, suppliers, current_capacity):
+def enhance(individual, capacity, suppliers, current_capacity,depth_enhance,count=0):
     
     len_individual = len(individual)
+    count = count + 1
+    #print(count)
+    if(count >= depth_enhance):
+        return [True, individual] 
 
     for i in range(0,len_individual-1):
         for j in range(i+1,len_individual):
             result = enhance_helper(individual,capacity,suppliers,current_capacity,i,j)
             if(result[0]):
-                return result
+                return enhance(result[1],capacity,suppliers,current_capacity,depth_enhance,count)
 
-    return [False, individual]
+    return [True, individual]
+
     
 def getScore(individual):         #Đếm số ngày trong plan đó
     return len(individual)
@@ -421,7 +426,7 @@ def mutation_population(population, capacity, suppliers, n_mutation,current_capa
             count = count+1
     return [count, population]
 
-def enhance_population(population,capacity,suppliers,current_capacity):
+def enhance_population(population,capacity,suppliers,current_capacity,depth_enhance):
     count = 0
     n_enhance = len(population)
 
@@ -432,7 +437,7 @@ def enhance_population(population,capacity,suppliers,current_capacity):
             if (len(gen)==0):
                 del new_individual[index]
        
-        [can_enhance,new_individual] = enhance(new_individual,capacity,suppliers,current_capacity)
+        [can_enhance,new_individual] = enhance(new_individual,capacity,suppliers,current_capacity,depth_enhance)
         
         if(can_enhance and len(new_individual) !=0):
             
@@ -451,8 +456,7 @@ def selection_population(population,n_selection):
 
     return population
 
-def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output ="", current_capacity = 0,n_bit_mutation = 50, n_max_crossover = 30, n_max_mutation=15):
-
+def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output ="", current_capacity = 0,n_bit_mutation = 50, n_max_crossover = 30, n_max_mutation=15, depth_enhance = 100):
 
 
     n_selection = int(n_selection * len(population))
@@ -501,7 +505,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
                 if(len(Fi) >= N0):
                     break
                 
-        Fi = enhance_population(Fi,capacity,suppliers,current_capacity)[1]
+        Fi = enhance_population(Fi,capacity,suppliers,current_capacity,depth_enhance)[1]
         Fi = Fi[:N0]
 
         Fi = selection_population(Fi,len(population))
@@ -539,14 +543,15 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     n_selection = 0.25, 
-    n_GA = 50,
+    n_GA = 10,
     n_crossover = 0.6,  
     #n_mutation = 0.15, 
     output = "output.txt",
     current_capacity = current_capacity,
     n_bit_mutation = 100,
     n_max_crossover = 30,
-    n_max_mutation = 15
+    n_max_mutation = 15,
+    depth_enhance = 10
 )
 
 end = time.time()

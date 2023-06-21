@@ -1,4 +1,6 @@
-output
-output.txt
+/output
+/output.txt
 __pycache__
 .vscode
+output
+output.txt

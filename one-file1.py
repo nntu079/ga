@@ -6,6 +6,20 @@ import itertools
 
 ############### UTILS #############
 
+
+def find_min(array):
+    result = {
+        "value":len(array[0]),
+        "index":0
+    }
+
+    for index,value in enumerate(array):
+        if len(value)<result["value"]:
+            result["value"] = len(value)
+            result["index"] = index
+
+    return (result["index"],result["value"])
+
 def sort_individual(individual):
     individual = sorted(individual, key=len, reverse=True)
     return individual
@@ -535,6 +549,8 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
         if(output != ""):
             f.write('GENERATION '+str(count)+'\n')
             for _ in Fi:
+                (index,value) = find_min(_)
+                f.write("min day "+ str(value)+ ", position: " + str(index) + " ")
                 f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
         else:
             print('Đời F'+ str(count))

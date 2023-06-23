@@ -300,14 +300,14 @@ def write_output(output,file_path):
 
             f.write('\n')
 
-def increase_population(Fi,suppliers,capacity,current_capacity, n_max):
-    F0 = makeF0(suppliers,capacity,current_capacity,n_max)
+#def increase_population(Fi,suppliers,capacity,current_capacity, n_max):
+#    F0 = makeF0(suppliers,capacity,current_capacity,n_max)
 
-    for individual in F0:
-        if individual not in Fi:
-            Fi.append(individual)
+#    for individual in F0:
+#        if individual not in Fi:
+#            Fi.append(individual)
     
-    return Fi[:n_max]     #ghi tắt của [0:n_max]
+#    return Fi[:n_max]     #ghi tắt của [0:n_max]
 
 ########### functions ########
 
@@ -317,13 +317,16 @@ def mutation_helper(individual,capacity,suppliers,current_capacity):
 
     #print(individual)
 
-    random1 = getRamdomIndex(individual)
-    random2 = getRamdomIndex(individual)
+    k = 1
+    while k <= 50:
+        random1 = getRamdomIndex(individual)
+        random2 = getRamdomIndex(individual)
 
-    temp = individual[random1[0]][random1[1]]
-    individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
-    individual[random2[0]][random2[1]] = temp
+        temp = individual[random1[0]][random1[1]]
+        individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
+        individual[random2[0]][random2[1]] = temp
 
+        k=k+1
     fix_individual = [True, individual]
     if( evaluate(individual,capacity,suppliers,current_capacity) == -1):
         fix_individual = fix(individual,suppliers,capacity,current_capacity)
@@ -388,7 +391,7 @@ def crossover_helper(individual1, individual2,random_index1,random_index2):
     
     return clone_individual1
 
-def crossover(individual1, individual2):
+def crossover(individual1, individual2):      #chọn vị trí 2 point bị cắt
 
     len_individual = 0
     
@@ -493,7 +496,6 @@ def selection_population(population,n_selection):
 
 def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output ="", current_capacity = 0,n_bit_mutation = 50, n_max_crossover = 30, n_max_mutation=15, depth_enhance = 100):
 
-
     n_selection = int(n_selection * len(population))
 
     Fi = population
@@ -513,7 +515,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
         #lặp tối đa n_max_crossover lần
         for i in range(0,n_max_crossover):
             Fi = crossover_population(Fi, capacity, suppliers, 1,current_capacity)[1]
-            Fi = sort_population(Fi)
+            #Fi = sort_population(Fi)
             #nếu thỏa thì dừng
             if(len(Fi)>=(n_crossover + n_selection)*N0):
                 break
@@ -525,7 +527,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
                     Fi.append(individual)
                 if(len(Fi) >= (n_crossover + n_selection) *N0):
                     break
-        Fi = sort_population(Fi)
+        #Fi = sort_population(Fi)
         #lặp tối đa n_max_mutation lần
         for i in range(0,n_max_mutation):
             Fi = mutation_population(Fi,capacity,suppliers,1,current_capacity,n_bit_mutation)[1]
@@ -540,8 +542,8 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
                     Fi.append(individual)
                 if(len(Fi) >= N0):
                     break
-        Fi = sort_population(Fi)
-        Fi = enhance_population(Fi,capacity,suppliers,current_capacity,depth_enhance)[1]
+        #Fi = sort_population(Fi)
+        
         Fi = Fi[:N0]
 
         Fi = sort_population(Fi)
@@ -559,6 +561,8 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
 
         print(len(Fi))
         print(f"Progress {(count)/n_GA *100: .2f}%")
+        if(count>99):
+            Fi = enhance_population(Fi,capacity,suppliers,current_capacity,depth_enhance)[1]
         count = count + 1
  
     return Fi
@@ -571,7 +575,7 @@ F0 = makeF0(
     suppliers = suppliers,
     capacity = capacity,
     current_capacity = current_capacity,
-    n_max = 1000
+    n_max = 100
 )
 
 import time
@@ -581,16 +585,16 @@ ga = GA(
     population = F0,
     capacity = capacity,
     suppliers = suppliers,
-    n_selection = 0.25,
-    n_GA = 10,
+    n_selection = 0.3,
+    n_GA = 100,
     n_crossover = 0.6,
-    #n_mutation = 0.15,
+    #n_mutation = 0.10,
     output = "output.txt",
     current_capacity = current_capacity,
-    n_bit_mutation = 100,
+    n_bit_mutation = 0,     #đổi cùng lúc
     n_max_crossover = 30,
     n_max_mutation = 15,
-    depth_enhance = 5
+    depth_enhance = 2
 )
 
 end = time.time()

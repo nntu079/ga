@@ -19,28 +19,28 @@ def find_min(array):
 
     return (result["index"],result["value"])
 
-def sort_individual(individual):
+def sort_individual(individual):  #ĐÃ THÊM MAFILE
     individual = sorted(individual, key=len, reverse=True)
     return individual
 
-def sort_population(population):
+def sort_population(population):  #ĐÃ THÊM MAFILE
     new_population = []
 
     for individual in population:
         new_population.append(sort_individual(individual))
     return new_population
 
-def sum_gen(gen, suppliers):     #tính tổng supplier trong 1 ngày bất kì
+def sum_gen(gen, suppliers):  #ĐÃ THÊM MAFILE                               #Dùng trong Fix   #tính tổng supplier trong 1 ngày bất kì
     sum = 0
     for bit in gen:
         sum = sum + suppliers[bit]
 
     return sum
 
-def cloneIndividual(individual):       #nhân bản 1 con bất kì
+def cloneIndividual(individual):   #ĐÃ THÊM MAFILE    #Dùng ở đâu???         #nhân bản 1 con bất kì
     return copy.deepcopy(individual)
 
-def fix(individual, suppliers, capacity,current_capacity):       
+def fix(individual, suppliers, capacity,current_capacity):       #ĐÃ THÊM MAFILE
     count = 0
     idx_gen = -1           #chưa biết gen thứ mấy nên tạm để -1
                            #idx: thứ tự của bit trong 1 gen
@@ -107,7 +107,7 @@ def fix(individual, suppliers, capacity,current_capacity):
 
     return [False, individual]
 
-def getRamdomIndex(individual):
+def getRamdomIndex(individual):   #ĐÃ THÊM MAFILE                            #Dùng trong Mutation
     len1 = len(individual)
     random1 = random.randint(0, len1-1)   #chọn ngẫu nhiên số thứ tự từ 0 tới len-1
 
@@ -116,7 +116,7 @@ def getRamdomIndex(individual):
 
     return [random1, random2]
 
-def evaluate(individual, capacity, suppliers, current_capacity = 0):
+def evaluate(individual, capacity, suppliers, current_capacity = 0):   #ĐÃ THÊM MAFILE
     
     if(current_capacity == 0):
         current_capacity = capacity
@@ -141,7 +141,7 @@ def evaluate(individual, capacity, suppliers, current_capacity = 0):
         idx = idx + 1
     return len(individual)
 
-def getRandomIndividual(populations,getIndex= False):   #trong mutation
+def getRandomIndividual(populations,getIndex= False):      #ĐÃ THÊM MAFILE                  #trong mutation
     len_populations = len(populations)
     random_index = random.randint(0, len_populations-1)
 
@@ -150,7 +150,7 @@ def getRandomIndividual(populations,getIndex= False):   #trong mutation
     
     return copy.deepcopy(populations[random_index])
 
-def getRandomTwoIndividual(populations):
+def getRandomTwoIndividual(populations):   #ĐÃ THÊM MAFILE
  
     if(len(populations) == 1):
         raise ValueError('There is only one supplier left')
@@ -165,7 +165,7 @@ def getRandomTwoIndividual(populations):
    
     return [copy.deepcopy(populations[random1]), copy.deepcopy(populations[random2])]
 
-def enhance_helper(individual,capacity, suppliers,current_capacity,idx_gen1, idx_gen2): 
+def enhance_helper(individual,capacity, suppliers,current_capacity,idx_gen1, idx_gen2): #ĐÃ THÊM MAFILE
 
     individual = copy.deepcopy(individual)
 
@@ -187,7 +187,7 @@ def enhance_helper(individual,capacity, suppliers,current_capacity,idx_gen1, idx
     else:
         return [True, individual]
     
-def enhance(individual, capacity, suppliers, current_capacity,depth_enhance,count=0):
+def enhance(individual, capacity, suppliers, current_capacity,depth_enhance,count=0):   #ĐÃ THÊM MAFILE
     
     len_individual = len(individual)
     count = count + 1
@@ -203,16 +203,16 @@ def enhance(individual, capacity, suppliers, current_capacity,depth_enhance,coun
 
     return [True, individual]
     
-def getScore(individual):         #Đếm số ngày trong plan đó
+def getScore(individual):     #ĐÃ THÊM VÀO MAFILE                             #Đếm số ngày trong plan đó
     return len(individual)
 
-def read_file(file_path):
+def read_file(file_path):   #ĐÃ THÊM VÀO MAFILE
 
     df = pd.read_csv(file_path)
 
     return df.to_dict('records')
 
-def read_input(file_path):
+def read_input(file_path):   #ĐÃ THÊM VÀO MAFILE
     input = read_file("./input/input1.csv")[0]
     capacity = input["capacity"]
     current_capacity=  input["current_capacity"]
@@ -229,7 +229,7 @@ def read_input(file_path):
         raise "Please move to the next day. Capacity returns to the original"
     return [capacity,current_capacity,suppliers]
 
-def write_output(output,file_path):
+def write_output(output,file_path):    #ĐÃ THÊM VÀO MAFILE
 
     with open(file_path,'w') as f:
         for individual in output:
@@ -253,7 +253,7 @@ def write_output(output,file_path):
 
 ########### functions ########
 
-def mutation_helper(individual,capacity,suppliers,current_capacity, depth_enhance):
+def mutation_helper(individual,capacity,suppliers,current_capacity, depth_enhance):  #ĐÃ THÊM VÀO MAFILE
     #return new individual (deep copy)
     individual = copy.deepcopy(individual) 
 
@@ -284,11 +284,9 @@ def mutation_helper(individual,capacity,suppliers,current_capacity, depth_enhanc
         individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
         individual[random2[0]][random2[1]] = temp
 
-    
-
     return [False, individual]
 
-def mutation(individual,capacity,suppliers,current_capacity, depth_enhance,n_bit_mutation=5):
+def mutation(individual,capacity,suppliers,current_capacity, depth_enhance,n_bit_mutation=5):  #ĐÃ THÊM VÀO MAFILE
     individual = copy.deepcopy(individual) 
 
     result = False
@@ -299,7 +297,7 @@ def mutation(individual,capacity,suppliers,current_capacity, depth_enhance,n_bit
         individual = copy.deepcopy(new_individual[1])
     return [result,individual]
 
-def crossover_helper(individual1, individual2,random_index1,random_index2):
+def crossover_helper(individual1, individual2,random_index1,random_index2):  #ĐÃ THÊM VÀO MAFILE
     
     clone_individual1 = copy.deepcopy(individual1)
 
@@ -339,7 +337,7 @@ def crossover_helper(individual1, individual2,random_index1,random_index2):
     
     return clone_individual1
 
-def crossover(individual1, individual2):      #chọn vị trí 2 point bị cắt
+def crossover(individual1, individual2):   #ĐÃ THÊM VÀO MAFILE   #chọn vị trí 2 point bị cắt
 
     len_individual = 0
     
@@ -355,7 +353,7 @@ def crossover(individual1, individual2):      #chọn vị trí 2 point bị c�
             crossover_helper(individual2,individual1,random_index1,random_index2)]
 ############## SUBMAIN ###################
 
-def crossover_population(population, capacity, suppliers, n_crossover,depth_enhance, current_capacity = 0):
+def crossover_population(population, capacity, suppliers, n_crossover,depth_enhance, current_capacity = 0):  #ĐÃ THÊM VÀO MAFILE
 
     if current_capacity == 0:
         current_capacity = capacity
@@ -422,7 +420,7 @@ def crossover_population(population, capacity, suppliers, n_crossover,depth_enha
 
     return [count,population]
 
-def mutation_population(population, capacity, suppliers, n_mutation,current_capacity,n_bit_mutation,depth_enhance):
+def mutation_population(population, capacity, suppliers, n_mutation,current_capacity,n_bit_mutation,depth_enhance):  #ĐÃ THÊM VÀO MAFILE
 
     count = 0
     for _ in range(0, n_mutation):
@@ -433,7 +431,7 @@ def mutation_population(population, capacity, suppliers, n_mutation,current_capa
             count = count+1
     return [count, population]
 
-def enhance_population(population,capacity,suppliers,current_capacity,depth_enhance):
+def enhance_population(population,capacity,suppliers,current_capacity,depth_enhance):  #ĐÃ THÊM MAFILE (bỏ)
     count = 0
     n_enhance = len(population)
 
@@ -456,7 +454,7 @@ def enhance_population(population,capacity,suppliers,current_capacity,depth_enha
     
     return [count,population]
 
-def selection_population(population,n_selection):
+def selection_population(population,n_selection):   #ĐÃ THÊM VÀO MAFILE
     population.sort(key=getScore)        #Sort là hàm mặc định từ nhỏ -> lớn, ở đây Sort số ngày
    
     population = population[:n_selection]
@@ -468,7 +466,6 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
     n_select_percent = n_selection
     n_selection = int(n_selection * len(population))
     
-
     Fi = population
     count = 1
     
@@ -501,7 +498,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
                     Fi.append(individual)
                 if(len(Fi) >= (n_crossover + n_select_percent) *N0):
                     break
-                
+
         print("Selection + Crossover", len(Fi))
         
 
@@ -549,7 +546,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
 
 ######### MAIN ############
 
-[capacity,current_capacity,suppliers] = read_input("./input/input1.csv")
+[capacity,current_capacity,suppliers] = read_input("./input/input1.csv")  #ĐÃ THÊM VÀO MAFILE
 
 def swap1d(arr:list, pos1:int,pos2:int) -> bool:
 
@@ -716,7 +713,7 @@ def makeF0(suppliers, capacity,current_capacity, n_max):    #CHƯA GIẢNG
             
     return F0[:n_max]
 
-import time
+import time     #ĐÃ THÊM VÀO MAFILE
 start = time.time()
 
 ga = GA(

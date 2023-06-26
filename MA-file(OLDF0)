@@ -384,44 +384,45 @@ def mutation_helper(individual,capacity,suppliers,current_capacity, depth_enhanc
 
     #print(individual)
 
-    k = 1
-    while k <= 50:
-        random1 = getRamdomIndex(individual)
-        random2 = getRamdomIndex(individual)
-
-        temp = individual[random1[0]][random1[1]]
-        individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
-        individual[random2[0]][random2[1]] = temp
-
-        k=k+1
-    fix_individual = [True, individual]
-    if( evaluate(individual,capacity,suppliers,current_capacity) == -1):
-        fix_individual = fix(individual,suppliers,capacity,current_capacity)
     
-    if(fix_individual[0]):
-        [enhance_success, enhance_child] = enhance(individual,suppliers,current_capacity,depth_enhance)
-        if(enhance_success):
-            return [enhance_success, enhance_child]
-        else:
-            return fix_individual
-    else:
-        temp = individual[random1[0]][random1[1]]
-        individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
-        individual[random2[0]][random2[1]] = temp
+    random1 = getRamdomIndex(individual)
+    random2 = getRamdomIndex(individual)
 
-    return [False, individual]
+    temp = individual[random1[0]][random1[1]]
+    individual[random1[0]][random1[1]] = individual[random2[0]][random2[1]]
+    individual[random2[0]][random2[1]] = temp
 
-#HÀM MUTATION HELPER: mutation 1 cá thể
+
+    return [True, individual]
+
+#HÀM MUTATION: mutation 1 cá thể
 def mutation(individual,capacity,suppliers,current_capacity, depth_enhance,n_bit_mutation=5):
     individual = copy.deepcopy(individual) 
 
     result = False
+    mutated_individual =  individual
     for i in range(0,n_bit_mutation):
-        new_individual = mutation_helper(individual,capacity,suppliers,current_capacity,depth_enhance)
-        if(new_individual[0] == True):
-            result = True
-        individual = copy.deepcopy(new_individual[1])
-    return [result,individual]
+        mutation_result= mutation_helper(mutated_individual,capacity,suppliers,current_capacity,depth_enhance)
+        mutated_individual = mutation_result[1]
+
+    if( evaluate(mutated_individual,capacity,suppliers,current_capacity) == -1):
+        [result_fix,fixed_individual] = fix(mutated_individual,suppliers,capacity,current_capacity)
+        if(result_fix):
+            [result_enhance,enhanced_individual] = enhance(mutated_individual,capacity,suppliers,current_capacity,depth_enhance)
+            if(result_enhance):
+                return [True,enhanced_individual]
+            else:
+                return [True,fixed_individual]
+        else:
+            return [False,mutated_individual]
+    else:
+        [result_enhance,enhanced_individual] = enhance(mutated_individual,capacity,suppliers,current_capacity,depth_enhance)
+        if(result_enhance):
+            return [True,enhanced_individual]
+        else:
+            return [True,mutated_individual]
+
+        
 
 #--------------------------------------XẾP CÁC OPERATOR THÀNH 1 BÀI GA----------------------------------------
 
@@ -456,16 +457,21 @@ def crossover_population(population, capacity, suppliers, n_crossover,depth_enha
                 [enhance_success, enhance_child1] = enhance(new_child,capacity,suppliers,current_capacity,depth_enhance=10)
                 count = count + 1
                 if(enhance_success):
-                    population.append(enhance_child1)
+                    if enhance_child1 not in population:
+                        population.append(enhance_child1)
                 else:
-                    population.append(new_child)
+                    if new_child not in population:
+                        population.append(new_child)
+
         elif len(child1) != 0:
             count = count + 1
             [enhance_success, enhance_child1] = enhance(child1,capacity,suppliers,current_capacity,depth_enhance)
             if(enhance_success):
-                    population.append(enhance_child1)
+                    if enhance_child1 not in population:
+                        population.append(enhance_child1)
             else:
-                population.append(child1)
+                    if child1 not in population:
+                        population.append(child1)
 
         #con thu hai
         if (evaluate(child2, capacity, suppliers,current_capacity) == -1) and len(child2) != 0:
@@ -474,17 +480,21 @@ def crossover_population(population, capacity, suppliers, n_crossover,depth_enha
                 count = count + 1
                 [enhance_success, enhance_child2] = enhance(new_child,capacity,suppliers,current_capacity,depth_enhance)
                 if(enhance_success):
-                    population.append(enhance_child2)
+                    if enhance_child2 not in population:
+                        population.append(enhance_child2)
                 else:
-                    population.append(new_child)
+                    if new_child not in population:
+                        population.append(new_child)
                     
         elif len(child2) != 0:
             count = count + 1
             [enhance_success, enhance_child2] = enhance(child2,capacity,suppliers,current_capacity,depth_enhance)
             if(enhance_success):
-                    population.append(enhance_child2)
+                    if enhance_child2 not in population:
+                        population.append(enhance_child2)
             else:
-                population.append(child2)
+                if child2 not in population:
+                    population.append(child2)
 
     for individual in population:
         for index,gen in  enumerate(individual):
@@ -499,11 +509,15 @@ def mutation_population(population, capacity, suppliers, n_mutation,current_capa
     count = 0
     for _ in range(0, n_mutation):
         individual = getRandomIndividual(population)
-        result = mutation(individual, capacity, suppliers,current_capacity,depth_enhance,n_bit_mutation)
-        if (result[0]):
-            population.append(individual)
+        
+        [mutation_result, mutated_individual] = mutation(individual, capacity, suppliers,current_capacity,depth_enhance,n_bit_mutation)
+
+        if (mutation_result and mutated_individual not in population):
+            population.append(mutated_individual)
+            print('Mutation thanh cong')
             count = count+1
-    return [count, population]
+
+    return [count, population,individual]
 
 #GA
 def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output ="", current_capacity = 0,n_bit_mutation = 50, n_max_crossover = 30, n_max_mutation=15, depth_enhance = 100):
@@ -511,7 +525,14 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
     n_select_percent = n_selection
     n_selection = int(n_selection * len(population))
     
+    #F0
     Fi = population
+
+    f0 = open('output_f0.txt', "w")
+    f0.write('GENERATION '+str(0)+'\n')
+    for _ in Fi:
+        f0.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+
     count = 1
     
     if(output != ""):       #nếu output khác rỗng (rỗng: ko có data) thì mở file output
@@ -525,35 +546,74 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
         
         print("Selection: ", len(Fi))
 
+        F_selection = copy.deepcopy(Fi)
+        if(output != ""):
+            f.write('SELECTION '+str(count-1)+'\n')
+            for _ in F_selection:
+                f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+        
+
         Fi = copy.deepcopy(Fi)
 
         #lặp tối đa n_max_crossover lần
         for i in range(0,n_max_crossover):
             Fi = crossover_population(Fi, capacity, suppliers, 1,depth_enhance,current_capacity)[1]
+            
             #Fi = sort_population(Fi)
             #nếu thỏa thì dừng
             if(len(Fi)>=(n_crossover + n_select_percent)*N0):
                 break
 
-        
+        #F_selection = copy.deepcopy(Fi)
+        #Fi = F_selection + F_crossover
+        #F_crossover = Fi - F_selection
+        F_crossover = []
+        for ind in Fi :
+            if ind in F_selection:
+                continue
+            else:
+                F_crossover.append(ind)
+
+        if(output != ""):
+            f.write('CROSSOVER '+str(count-1)+'\n')
+            for _ in F_crossover:
+                f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+
+
+        Fi_add_crossover = []
         #kiểm tra đủ 85% chưa để thêm từ đời fi-1
         if(len(Fi)<(n_crossover + n_select_percent)*N0):
             for individual in Fi_1:
                 if individual not in Fi: #not in khử trùng
                     Fi.append(individual)
+                    Fi_add_crossover.append(individual)
                 if(len(Fi) >= (n_crossover + n_select_percent) *N0):
                     break
 
         print("Selection + Crossover", len(Fi))
-        
+    
+        # toi day thi ta co Fi =  F_selection + F_crossover + Fi_add_crossover
 
-        #Fi = sort_population(Fi)
         #lặp tối đa n_max_mutation lần
+        F_mutation = []
         for i in range(0,n_max_mutation):
-            Fi = mutation_population(Fi,capacity,suppliers,1,current_capacity,n_bit_mutation,depth_enhance)[1]
+            [count,population,mutated_individual] = mutation_population(Fi,capacity,suppliers,1,current_capacity,n_bit_mutation,depth_enhance)
+            Fi = population
+
+            if(count == 1):
+                F_mutation.append(mutated_individual)
+
+            #print('tao ra mutation 1 lan',result_mutation[0])
             #nếu thỏa thì dừng
             if(len(Fi)>=N0):
                 break   
+
+
+        if(output != ""):
+            f.write('MUTATION '+str(count-1)+'\n')
+            for _ in F_mutation :
+
+                f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
 
         #kiểm tra sau khi mutation đủ 100% chưa để thêm từ đời fi-1
         if(len(Fi)<N0):
@@ -579,6 +639,11 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
             print('Đời F'+ str(count))
             for _ in Fi:
                 print(str(_))
+
+        if(count <=1):
+            f0.write('GENERATION '+str(count)+'\n')
+            for _ in Fi:
+                f0.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
 
         print(len(Fi))
         print(f"Progress {(count)/n_GA *100: .2f}%")
@@ -606,11 +671,11 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     current_capacity = current_capacity,
-    n_GA = 100,
+    n_GA = 20,
     n_selection = 0.3,
     n_crossover = 0.6,
     #n_mutation = 0.10,  
-    n_bit_mutation = 0,     #đổi cùng lúc
+    n_bit_mutation = 10,     #đổi cùng lúc
     n_max_crossover = 50,
     n_max_mutation = 50,
     depth_enhance = 2,

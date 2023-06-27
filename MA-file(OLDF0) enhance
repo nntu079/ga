@@ -48,6 +48,13 @@ def write_output(output,file_path):
 
 #--------------------------------------------KHAI BÁO 1 SỐ HÀM DÙNG CHUNG---------------------------------
 
+
+def shuffele_population(population):
+    new_population = copy.deepcopy(population)
+    for individual in new_population:
+        random.shuffle(individual)
+    return new_population
+
 #Nhân bản 1 con bất kì
 def cloneIndividual(individual):        
     return copy.deepcopy(individual)
@@ -521,6 +528,8 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
         print("Selection: ", len(Fi))
 
         F_selection = copy.deepcopy(Fi)
+        F_selection = shuffele_population(F_selection)
+
         if(output != ""):
             f.write('SELECTION '+str(count-1)+'\n')
             for _ in F_selection:

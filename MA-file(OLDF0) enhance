@@ -429,9 +429,11 @@ def crossover_population(population, capacity, suppliers, n_crossover, current_c
                 if(enhance_success):
                     if enhance_child1 not in population:
                         population.append(enhance_child1)
+                        print('Crossover thanh cong')
                 else:
                     if new_child not in population:
                         population.append(new_child)
+                        print('Crossover thanh cong')
 
         elif len(child1) != 0:
             count = count + 1
@@ -439,9 +441,11 @@ def crossover_population(population, capacity, suppliers, n_crossover, current_c
             if(enhance_success):
                     if enhance_child1 not in population:
                         population.append(enhance_child1)
+                        print('Crossover thanh cong')
             else:
                     if child1 not in population:
                         population.append(child1)
+                        print('Crossover thanh cong')
 
         #con thu hai
         if (evaluate(child2, capacity, suppliers,current_capacity) == -1) and len(child2) != 0:
@@ -641,7 +645,7 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     current_capacity = current_capacity,
-    n_GA = 20,
+    n_GA = 100,
     n_selection = 0.3,
     n_crossover = 0.6,
     #n_mutation = 0.10,  

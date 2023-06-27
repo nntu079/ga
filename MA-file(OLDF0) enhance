@@ -508,6 +508,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
     
     #F0
     Fi = population
+    Fi = shuffele_population(Fi)   
 
     f0 = open('output_f0.txt', "w")
     f0.write('GENERATION '+str(0)+'\n')
@@ -523,10 +524,8 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
         #fi-1
         Fi_1 = copy.deepcopy(Fi)
         N0 = len(Fi_1)
-        Fi = shuffele_population(Fi)   
         
         Fi = selection_population(Fi,n_selection)
-        
         
         print("Selection: ", len(Fi))
 

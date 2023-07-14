@@ -4,6 +4,7 @@ import copy
 import pandas as pd
 import numpy as np
 import itertools
+import matplotlib.pyplot as plt
 
 
 
@@ -47,13 +48,6 @@ def write_output(output,file_path):
 
 
 #--------------------------------------------KHAI BÁO 1 SỐ HÀM DÙNG CHUNG---------------------------------
-
-
-def shuffele_population(population):
-    new_population = copy.deepcopy(population)
-    for individual in new_population:
-        random.shuffle(individual)
-    return new_population
 
 #Nhân bản 1 con bất kì
 def cloneIndividual(individual):        
@@ -210,7 +204,7 @@ def sort_population(population):
 
 
 
-#-------------------------------------------TẠO ĐỜI FgetScoreO------------------------------------------------------
+#-------------------------------------------TẠO ĐỜI FeO------------------------------------------------------
 
 def makeF0(suppliers, capacity,current_capacity, n_max):    #CHƯA GIẢNG
     F0 = []
@@ -243,6 +237,59 @@ def makeF0(suppliers, capacity,current_capacity, n_max):    #CHƯA GIẢNG
                 return F0[:n_max]
             
     return F0[:n_max]
+
+
+def make_f0_random(suppliers, capacity,current_capacity, n_seeding, pop_size):
+    
+    f = open('test_makeF02.txt', "w")
+
+    F0 = makeF0(suppliers,capacity,current_capacity,n_seeding)
+    new_F0 = []
+
+    random_individual = random.choice(F0)
+
+    statistic = {
+        len(random_individual):len(F0)
+    }
+
+   
+
+    for individual in F0:
+        random.shuffle(individual) 
+        if(individual not in new_F0):
+            new_F0.append(individual)
+        else:
+            while(individual in new_F0):
+                random.shuffle(individual)    
+            new_F0.append(individual)
+    
+    while(len(new_F0) != pop_size):
+        individual = random.choice(new_F0)
+        [enhance_result, enhanced_individual] = enhance(individual,capacity,suppliers,current_capacity)
+        if(enhance_result):
+            #print('Enhance thanh cong')
+            if(enhanced_individual not in new_F0):
+                #print('Them vao quan the F0 thanh cong')
+                new_F0.append(enhanced_individual)
+                #if(len(enhanced_individual) in statistic):
+                    #statistic[len(enhanced_individual)]+=1
+                #else:
+                     #statistic[len(enhanced_individual)] = 1
+            else:
+                #print('Them vao quan the that bai do da ton tai ca the nay')
+                pass
+    
+    for _ in new_F0:
+        f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+    
+    #names = list(statistic.keys())
+    #values = list(statistic.values())
+    #plt.bar(range(len(statistic)), values, tick_label=names)
+    #plt.xlabel('So ngay')
+    #plt.ylabel('So luong con')
+    #plt.show()
+
+    return new_F0
 
 #-------------------------------------------SELECTION--------------------------------------------------------
 
@@ -436,11 +483,11 @@ def crossover_population(population, capacity, suppliers, n_crossover, current_c
                 if(enhance_success):
                     if enhance_child1 not in population:
                         population.append(enhance_child1)
-                        print('Crossover thanh cong')
+                        #print('Crossover thanh cong')
                 else:
                     if new_child not in population:
                         population.append(new_child)
-                        print('Crossover thanh cong')
+                        #print('Crossover thanh cong')
 
         elif len(child1) != 0:
             count = count + 1
@@ -448,11 +495,11 @@ def crossover_population(population, capacity, suppliers, n_crossover, current_c
             if(enhance_success):
                     if enhance_child1 not in population:
                         population.append(enhance_child1)
-                        print('Crossover thanh cong')
+                        #print('Crossover thanh cong')
             else:
                     if child1 not in population:
                         population.append(child1)
-                        print('Crossover thanh cong')
+                        #print('Crossover thanh cong')
 
         #con thu hai
         if (evaluate(child2, capacity, suppliers,current_capacity) == -1) and len(child2) != 0:
@@ -495,7 +542,7 @@ def mutation_population(population, capacity, suppliers, n_mutation,current_capa
 
         if (mutation_result and mutated_individual not in population):
             population.append(mutated_individual)
-            print('Mutation thanh cong')
+            #print('Mutation thanh cong')
             count = count+1
 
     return [count, population,individual]
@@ -508,12 +555,11 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
     
     #F0
     Fi = population
-    Fi = shuffele_population(Fi)   
 
-    f0 = open('output_f0.txt', "w")
-    f0.write('GENERATION '+str(0)+'\n')
-    for _ in Fi:
-        f0.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+    #f0 = open('output_f0.txt', "w")
+    #f0.write('GENERATION '+str(0)+'\n')
+    #for _ in Fi:
+        #f0.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
 
     count = 1
     
@@ -524,14 +570,11 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
         #fi-1
         Fi_1 = copy.deepcopy(Fi)
         N0 = len(Fi_1)
+        Fi = selection_population(Fi,n_selection)    
         
-        Fi = selection_population(Fi,n_selection)
-        
-        print("Selection: ", len(Fi))
+        #print("Selection: ", len(Fi))
 
         F_selection = copy.deepcopy(Fi)
-        
-
         if(output != ""):
             f.write('SELECTION '+str(count-1)+'\n')
             for _ in F_selection:
@@ -559,10 +602,10 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
             else:
                 F_crossover.append(ind)
 
-        if(output != ""):
-            f.write('CROSSOVER '+str(count-1)+'\n')
-            for _ in F_crossover:
-                f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+        #if(output != ""):
+            #f.write('CROSSOVER '+str(count-1)+'\n')
+            #for _ in F_crossover:
+                #f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
 
 
         Fi_add_crossover = []
@@ -575,7 +618,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
                 if(len(Fi) >= (n_crossover + n_select_percent) *N0):
                     break
 
-        print("Selection + Crossover", len(Fi))
+        #print("Selection + Crossover", len(Fi))
     
         # toi day thi ta co Fi =  F_selection + F_crossover + Fi_add_crossover
 
@@ -593,12 +636,12 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
             if(len(Fi)>=N0):
                 break   
 
-        print('count ',count)
-        if(output != ""):
-            f.write('MUTATION '+str(count-1)+'\n')
-            for _ in F_mutation :
+        #print('count ',count)
+        #if(output != ""):
+            #f.write('MUTATION '+str(count-1)+'\n')
+            #for _ in F_mutation :
 
-                f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+                #f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
 
         #kiểm tra sau khi mutation đủ 100% chưa để thêm từ đời fi-1
         if(len(Fi)<N0):
@@ -612,7 +655,7 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
 
         Fi = Fi[:N0]
 
-        print("Selection + Crossover + Mutation", len(Fi))
+        #print("Selection + Crossover + Mutation", len(Fi))
 
         #Fi = sort_population(Fi)
         Fi = selection_population(Fi,len(population))
@@ -621,16 +664,17 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
             for _ in Fi:
                 f.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
         else:
-            print('Đời F'+ str(count))
-            for _ in Fi:
-                print(str(_))
+            #print('Đời F'+ str(count))
+            #for _ in Fi:
+                #print(str(_))
+            pass
 
-        if(count <=1):
-            f0.write('GENERATION '+str(count)+'\n')
-            for _ in Fi:
-                f0.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
+        #if(count <=1):
+            #f0.write('GENERATION '+str(count)+'\n')
+            #for _ in Fi:
+                #f0.write(str(_)+ ' ===> Days required: '+ str(len(_))+'\n') 
 
-        print(len(Fi))
+        #print(len(Fi))
         print(f"Progress {(count)/n_GA *100: .2f}%")
         
         count = count + 1
@@ -641,11 +685,13 @@ def GA(population, capacity,suppliers, n_GA, n_crossover,n_selection, output =""
 
 [capacity,current_capacity,suppliers] = read_input("./input/input1.csv")
 
-F0 = makeF0(
-    suppliers = suppliers,
-    capacity = capacity,
-    current_capacity = current_capacity,
-    n_max = 100
+
+F0 = make_f0_random(
+    suppliers=suppliers,
+    capacity=capacity,
+    current_capacity=current_capacity,
+    n_seeding=15,
+    pop_size=100
 )
 
 import time
@@ -656,11 +702,11 @@ ga = GA(
     capacity = capacity,
     suppliers = suppliers,
     current_capacity = current_capacity,
-    n_GA = 100,
-    n_selection = 0.3,
-    n_crossover = 0.6,
-    #n_mutation = 0.10,  
-    n_bit_mutation = 10,     #đổi cùng lúc
+    n_GA = 150,
+    n_selection = 0.3,  #30
+    n_crossover = 0.6,  #60
+    #n_mutation = 0.10, #10
+    n_bit_mutation = 50,     #đổi cùng lúc
     n_max_crossover = 50,
     n_max_mutation = 50,
     output = "output.txt"
